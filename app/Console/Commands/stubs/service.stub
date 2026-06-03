@@ -1,0 +1,50 @@
+<?php
+
+namespace App\Services\{{ name }};
+
+use App\Repository\{{ name }}\{{ name }}Repository;
+
+class {{ name }}Services
+{
+    public function __construct(protected {{ name }}Repository ${{ name }}repository)
+    {
+        $this->{{ name }}repository = ${{ name }}repository;
+    }
+
+    public function getAll()
+    {
+        return $this->{{ name }}repository->getAll();
+    }
+
+    public function getWhereId($id)
+    {
+        return $this->{{ name }}repository->findId($id);
+    }
+
+    public function create(array $data)
+    {
+        $data = [
+            '' => $data[''],
+        ];
+
+        return $this->{{ name }}repository->create($data);
+    }
+
+    public function update(array $data, $id)
+    {
+        $cart = $this->{{ name }}repository->findId($id);
+
+        $data = [
+            '' => $data[''],
+        ];
+
+        return $this->{{ name }}repository->update($data, $cart);
+    }
+
+    public function delete($id)
+    {
+        $cart = $this->{{ name }}repository->findId($id);
+
+        return $this->{{ name }}repository->delete($cart);
+    }
+}

@@ -1,0 +1,35 @@
+<?php
+
+namespace App\Repository\{{ name }};
+
+use App\Models\{{ name }};
+
+class {{ name }}Repository
+{
+    public function getAll()
+    {
+        return {{ name }}::all();
+    }
+
+    public function findId(int $id)
+    {
+        return {{ name }}::findOrFail($id);
+    }
+
+    public function create({{ name }} ${{ name }}, array $data)
+    {
+        return {{ name }}::create($data);
+    }
+
+    public function update({{ name }} ${{ name }}, array $data)
+    {
+        ${{ name }}->update($data);
+
+        return ${{ name }}->fresh();
+    }
+
+    public function delete({{ name }} ${{ name }})
+    {
+        return ${{ name }}->delete();
+    }
+}
