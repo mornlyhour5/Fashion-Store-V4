@@ -13,39 +13,60 @@ class AddressController extends Controller
         $this->addressService = $addressService;
     }
 
-    public function index()
-    {
-        try{
-            $address = $this->addressService->getAll();
 
-            return response()->json([
-                'message' => 'Data address user retrived successfully',
-                'data' => $address
-            ]);
-        }catch(\Exception $e){
-            return response()->json([
-                'message' => 'Something went wrong',
-                'error' => $e->getMessage()
-            ]);
-        }
+
+    public function index(Request $request)
+{
+    try {
+        $userId    = $request->user()->id;
+        $addresses = $this->addressService->getByUserId($userId);
+
+        return response()->json([
+            'message' => 'Addresses retrieved successfully',
+            'data'    => $addresses
+        ]);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'message' => 'Something went wrong',
+            'error'   => $e->getMessage()
+        ], 500);
     }
+}
 
-    public function show($id)
-    {
-        try{
-            $address = $this->addressService->getWhereId($id);
+// ✅ Get ONE address by ID
+public function show(Request $request, $id)
+{
+    try {
+        $address = $this->addressService->getWhereId($id);
 
-            return response()->json([
-                'message' => 'Data address user retrived successfully',
-                'data' => $address
-            ]);
-        }catch(\Exception $e){
-            return response()->json([
-                'message' => 'Something went wrong',
-                'error' => $e->getMessage()
-            ]);
-        }
+        return response()->json([
+            'message' => 'Address retrieved successfully',
+            'data'    => $address
+        ]);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'message' => 'Something went wrong',
+            'error'   => $e->getMessage()
+        ], 500);
     }
+}
+
+
+//  public function getAddressBySession(Request $request)
+//     {
+//         $address = \App\Models\Addresses::where('user_id', $request->user()->id)->first();
+//         // $address = \App\Models\Addresses::all();
+
+//         if (!$address) {
+//             return response()->json([
+//                 'message' => 'Address not found'
+//             ], 404);
+//         }
+
+//         return response()->json($address);
+//     }
 
     public function store(Request $request)
     {

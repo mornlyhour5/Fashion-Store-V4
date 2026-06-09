@@ -16,48 +16,55 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Order\OrderItemController;
 use App\Http\Controllers\Order\OrderStatusHistoryController;
 use App\Http\Controllers\ProductsController;
-use App\Models\Customers;
+// use App\Models\Customers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 // use Illuminate\Support\Facades\Auth;
 
+//----------------------------------------------------------
+//                    Public Routes
+//----------------------------------------------------------
+Route::post('/login',    [LoginController::class,   'login']);
+Route::post('/register', [RegisterController::class, 'register']);
+
+
+    // Route::get('/addresses', [AddressController::class, 'show']);
+//----------------------------------------------------------
+//                    Protected Routes
+//----------------------------------------------------------
 Route::middleware('auth:sanctum')->group(function () {
 
+    // Auth
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
-
     Route::post('/logout', [LoginController::class, 'logout']);
 
-    // ✅ Get customer by ID
-    Route::get('/customers/{id}', function (Request $request, $id) {
-        if ($request->user()->id !== (int)$id) {
-            return response()->json(['message' => 'Unauthorized'], 403);
-        }
-        return Customers::where('user_id', $id)->first();
-    });
+    // ✅ Me route — get current logged in customer
+    Route::get('/me', [CustomerController::class, 'me']);
 
-    // ✅ Get current logged in customer (recommended)
-    Route::get('/me', function (Request $request) {
-        $userId = $request->user()->id;
-        return Customers::where('user_id', $userId)->first();
-    });
+    // ✅ Customer routes — protected
+    Route::get('/customers',        [CustomerController::class, 'index']);
+    Route::post('/customers',       [CustomerController::class, 'store']);
+    Route::get('/customers/{id}',   [CustomerController::class, 'show']);
+    Route::put('/customers/{id}',   [CustomerController::class, 'update']);
+    Route::delete('/customers/{id}',[CustomerController::class, 'delete']);
 
-    // Route::post('/logout', [LoginController::class, 'logout']);
-    Route::post('/logout', [RegisterController::class, 'logout']);
+    // ✅ Address routes — protected
+    Route::get('/addresses',         [AddressController::class, 'index']);   // get all
+    Route::get('/addresses/{id}',    [AddressController::class, 'show']);    // get one
+    Route::post('/addresses',        [AddressController::class, 'store']);   // create
+    Route::put('/addresses/{id}',    [AddressController::class, 'update']);  // update
+    Route::delete('/addresses/{id}', [AddressController::class, 'delete']);
+
+    // Route::get('/getAddressBySession', [AddressController::class, 'getAddressBySession']);
+    // Orders
+    Route::post('/Mainorders', [ProductsController::class, 'store']);
 
 });
 
-Route::post('/Mainorders', [ProductsController::class, 'store']);
+// Route::post('/Mainorders', [ProductsController::class, 'store']);
 
-
-//----------------------------------------------------------------------------------
-//                              Block Route in folder AUTH
-//----------------------------------------------------------------------------------
-Route::post('/login', [LoginController::class, 'login']);
-// Route::post('/change-password', [LoginController::class, 'changePassword']);
-Route::post('/register', [RegisterController::class, 'register']);
-Route::post('/logout', [RegisterController::class, 'logout']);
 
 Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLink']);
 Route::post('/reset-password', [ResetPasswordController::class, 'reset']);
@@ -74,7 +81,7 @@ Route::delete('/category/{id}', [CategoryController::class, 'delete']);
 
 
 Route::get('/products', [ProductController::class, 'index']);
-Route::post('/products', [ProductController::class, 'store']);  
+Route::post('/products', [ProductController::class, 'store']);
 Route::get('/products/{id}', [ProductController::class, 'show']);
 Route::put('/products/{id}', [ProductController::class, 'update']);
 Route::delete('/products/{id}', [ProductController::class, 'delete']);
@@ -93,15 +100,6 @@ Route::get('/Product-variant/{id}', [ProductVariantController::class, 'show']);
 Route::put('/Product-variant/{id}', [ProductVariantController::class, 'update']);
 Route::delete('/Product-variant/{id}', [ProductVariantController::class, 'delete']);
 
-
-//----------------------------------------------------------------------------------
-//                              Block Route in folder Customers
-//----------------------------------------------------------------------------------
-Route::get('/Address', [AddressController::class, 'index']);
-Route::post('/Address', [AddressController::class, 'store']);
-Route::get('/Address/{id}', [AddressController::class, 'show']);
-Route::put('/Address/{id}', [AddressController::class, 'update']);
-Route::delete('/Address/{id}', [AddressController::class, 'delete']);
 
 
 Route::get('/customers', [CustomerController::class, 'index']);

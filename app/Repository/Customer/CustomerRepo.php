@@ -16,20 +16,19 @@ class CustomerRepo
         return Customers::findOrFail($id);
     }
 
-    public function create(array $data)
+    public function create(array $data): Customers
     {
         return Customers::create($data);
     }
 
-    public function update(Customers $customers, array $data)
+    public function update(Customers $customer, array $data): Customers
     {
-        $customers->update($data);
-
-        return $customers->fresh();
+        $customer->update($data);
+        return $customer->fresh();
     }
 
-    public function delete(Customers $customers)
+    public function delete(Customers $customer): bool
     {
-        return $customers->delete();
+        return $customer->delete();
     }
 }

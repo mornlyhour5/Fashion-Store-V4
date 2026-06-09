@@ -4,11 +4,10 @@ namespace App\Domain;
 
 class BaseAuthUser
 {
-    /**
-     * Create a new class instance.
-     */
-    public function __construct()
-    {
-        //
+    public function __construct(
+        public readonly int $id,
+        public readonly string $name,
+        public readonly string $email,
+    ) {
     }
 }

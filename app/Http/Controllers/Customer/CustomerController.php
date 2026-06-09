@@ -13,6 +13,19 @@ class CustomerController extends Controller
         $this->customerService = $customerService;
     }
 
+    public function me(Request $request)
+    {
+        $customer = \App\Models\Customers::where('user_id', $request->user()->id)->first();
+    // $customer = \App\Models\Customers::all();
+        if (!$customer) {
+            return response()->json([
+                'message' => 'Customer profile not found'
+            ], 404);
+        }
+
+        return response()->json($customer);
+    }
+
     public function index()
     {
         try{
@@ -62,7 +75,7 @@ class CustomerController extends Controller
                 'note'                => 'nullable|string',
             ]);
 
-            $customers = $this->customerService->create($request->all());
+            $customers = $this->customerService->register($request->all());
 
             return response()->json([
                 'message' => 'Customer create successfully',
@@ -76,32 +89,72 @@ class CustomerController extends Controller
         }
     }
 
+    // public function update(Request $request, $id)
+    // {
+    //     try{
+    //         $request->validate([
+    //             'user_id'             => 'required|exists:users,id',
+    //             'full_name'           => 'required|string|max:255',
+    //             'phone'               => 'nullable|string|max:20',
+    //             'gender'              => 'nullable',
+    //             'date_of_birth'       => 'nullable|date',
+    //             'preferred_language'  => 'nullable|string|max:10',
+    //             'note'                => 'nullable|string',
+    //         ]);
+
+    //         $customers = $this->customerService->update($request->all(), $id);
+
+    //         return response()->json([
+    //             'message' => 'Customer update successfully',
+    //             'data' => $customers
+    //         ]);
+    //     }catch (\Exception $e){
+    //         return response()->json([
+    //             'message' => 'Something went wrong',
+    //             'error' => $e->getMessage()
+    //         ]);
+    //     }
+    // }
+
     public function update(Request $request, $id)
-    {
-        try{
-            $request->validate([
-                'user_id'             => 'required|exists:users,id',
-                'full_name'           => 'required|string|max:255',
-                'phone'               => 'nullable|string|max:20',
-                'gender'              => 'nullable',
-                'date_of_birth'       => 'nullable|date',
-                'preferred_language'  => 'nullable|string|max:10',
-                'note'                => 'nullable|string',
-            ]);
+{
+    try {
+        $customer = \App\Models\Customers::findOrFail($id);
 
-            $customers = $this->customerService->update($request->all(), $id);
-
-            return response()->json([
-                'message' => 'Customer update successfully',
-                'data' => $customers
-            ]);
-        }catch (\Exception $e){
-            return response()->json([
-                'message' => 'Something went wrong',
-                'error' => $e->getMessage()
-            ]);
+        // ✅ Only allow user to update their own profile
+        if ($customer->user_id !== $request->user()->id) {
+            return response()->json(['message' => 'Unauthorized'], 403);
         }
+
+        $validated = $request->validate([
+            'first_name'    => 'nullable|string|max:255',
+            'last_name'     => 'nullable|string|max:255',
+            'phone'         => 'nullable|string|max:20',
+            'gender'        => 'nullable|in:1,2,3',
+            'date_of_birth' => 'nullable|date',
+            'note'          => 'nullable|string',
+        ]);
+
+        $customer->update($validated);
+
+        return response()->json([
+            'message'  => 'Profile updated successfully',
+            'customer' => $customer
+        ]);
+
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        return response()->json([
+            'message' => 'Validation failed',
+            'errors'  => $e->errors()
+        ], 422);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'message' => 'Something went wrong',
+            'error'   => $e->getMessage()
+        ], 500);
     }
+}
 
     public function delete($id)
     {

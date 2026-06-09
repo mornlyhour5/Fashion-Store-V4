@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers\Product;
 
+// use App\Enums\GenderProduct;
+use App\Enums\ProductStatus;
 use App\Http\Controllers\Controller;
 use App\Services\Product\ProductServices;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rules\Enum;
 
 class ProductController extends Controller
 {
@@ -57,7 +60,8 @@ class ProductController extends Controller
                 'brand'         => 'nullable',
                 'base_price'    => 'required',
                 'gender'        => 'nullable',
-                'status'        => 'nullable',
+                // 'gender'        => ['nullable', new Enum(GenderProduct::class)], // men | women | unisex | kids
+                'status'        => ['required', new Enum(ProductStatus::class)],
                 'image'         => 'nullable'
             ]);
 

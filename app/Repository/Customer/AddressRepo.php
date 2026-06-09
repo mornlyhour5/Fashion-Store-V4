@@ -11,6 +11,11 @@ class AddressRepo
         return Addresses::all();
     }
 
+    public function getByUserId(int $userId)
+    {
+        return Addresses::where('user_id', $userId)->get();
+    }
+
     public function findId($id)
     {
         return Addresses::findOrFail($id);

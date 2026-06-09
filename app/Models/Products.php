@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use App\Enums\GenderProduct;
 use Illuminate\Database\Eloquent\Model;
+use App\Enums\ProductStatus;
 
 class Products extends Model
 {
@@ -30,4 +32,9 @@ class Products extends Model
     {
         return $this->hasMany(Product_Images::class, 'product_id');
     }
+
+    protected $casts = [
+        'status' => ProductStatus::class,
+        'gender' => GenderProduct::class, // 👈 added
+    ];
 }
