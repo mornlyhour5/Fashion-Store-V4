@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers\Product;
 
-// use App\Enums\GenderProduct;
-use App\Enums\ProductStatus;
+use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Services\Product\ProductServices;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rules\Enum;
 
 class ProductController extends Controller
 {
@@ -18,109 +16,26 @@ class ProductController extends Controller
 
     public function index()
     {
-        try{
-            $product = $this->productServices->getAll();
-
-            return response()->json([
-                'message' => 'Product retrived successfully',
-                'data' => $product
-            ]);
-        }catch(\Exception $e){
-            return response()->json([
-                'message' => 'Something went wrong',
-                'data' => $e->getMessage()
-            ]);
-        }
+        return ApiResponse::success($this->productServices->getAll());
     }
 
     public function show($id)
     {
-        try{
-            $product = $this->productServices->getWhereId($id);
-
-            return response()->json([
-                'message' => 'Product retrived successfully',
-                'data' => $product
-            ]);
-        }catch(\Exception $e){
-            return response()->json([
-                'message' => 'Something went wrong',
-                'data' => $e->getMessage()
-            ]);
-        }
+        return ApiResponse::success($this->productServices->getWhereId($id));
     }
 
     public function store(Request $request)
     {
-        try{
-            $request->validate([
-                'category_id'   => 'required',
-                'name'          => 'required|string|max:500',
-                'description'   => 'nullable',
-                'brand'         => 'nullable',
-                'base_price'    => 'required',
-                'gender'        => 'nullable',
-                // 'gender'        => ['nullable', new Enum(GenderProduct::class)], // men | women | unisex | kids
-                'status'        => ['required', new Enum(ProductStatus::class)],
-                'image'         => 'nullable'
-            ]);
-
-            $product = $this->productServices->create($request->all());
-
-            return response()->json([
-                'message' => 'Product insert successfully',
-                'data' => $product
-            ]);
-        }catch(\Exception $e){
-            return response()->json([
-                'message' => 'Something went wrong',
-                'data' => $e->getMessage()
-            ]);
-        }
+        return ApiResponse::success($this->productServices->create($request->all()));
     }
 
     public function update(Request $request, $id)
     {
-        try{
-            $request->validate([
-                'category_id'   => 'required',
-                'name'          => 'required|string|max:500',
-                'description'   => 'nullable',
-                'brand'         => 'nullable',
-                'base_price'    => 'required',
-                'gender'        => 'nullable',
-                'status'        => 'nullable',
-                'image'         => 'nullable'
-            ]);
-
-            $product = $this->productServices->update($request->all(), $id);
-
-            return response()->json([
-                'message' => 'Product update successfully',
-                'data' => $product
-            ]);
-        }catch(\Exception $e){
-            return response()->json([
-                'message' => 'Something went wrong',
-                'data' => $e->getMessage()
-            ]);
-        }
+        return ApiResponse::success($this->productServices->update($request->all(), $id));
     }
 
     public function delete($id)
     {
-        try{
-            $product = $this->productServices->delete($id);
-
-            return response()->json([
-                'message' => 'Product delete successfully',
-                'data' => $product
-            ]);
-        }catch(\Exception $e){
-            return response()->json([
-                'message' => 'Something went wrong',
-                'data' => $e->getMessage()
-            ]);
-        }
+        return ApiResponse::success($this->productServices->delete($id));
     }
 }

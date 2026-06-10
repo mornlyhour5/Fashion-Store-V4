@@ -2,12 +2,12 @@
 
 namespace App\Enums;
 
-enum GenderProduct: string
+enum GenderProduct: int
 {
-    case MEN    = 'men';
-    case WOMEN  = 'women';
-    case UNISEX = 'unisex';
-    case KIDS   = 'kids';
+    case MEN    = 1;
+    case WOMEN  = 2;
+    case UNISEX = 3;
+    case KIDS   = 4;
 
     public function label(): string
     {
