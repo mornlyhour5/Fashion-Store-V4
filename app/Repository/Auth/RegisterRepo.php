@@ -14,6 +14,6 @@ class RegisterRepo
         'email'    => $dto->email,
         'password' => bcrypt($dto->password),
     ]);
-        
+
     }
 }

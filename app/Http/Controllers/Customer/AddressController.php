@@ -13,7 +13,7 @@ class AddressController extends Controller
     {
         $this->addressService = $addressService;
     }
-    
+
     public function index(Request $request)
     {
         $userId    = $request->user()->id;

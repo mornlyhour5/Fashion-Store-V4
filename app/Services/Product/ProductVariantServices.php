@@ -2,6 +2,8 @@
 
 namespace App\Services\Product;
 
+use App\Domain\Entities\ProductVariantEntities;
+use App\DTO\ProductVariantDTO;
 use App\Repository\Product\ProductVariantRepo;
 
 class ProductVariantServices
@@ -21,25 +23,42 @@ class ProductVariantServices
         return $this->productVariantRepo->findId($id);
     }
 
-    public function create(array $data)
+    public function create(ProductVariantDTO $dto)
     {
-        $data = [
-            'product_id' => $data['product_id'],
-            'sku'        => $data['sku'],
-            'color'      => $data['color'],
-            'size'       => $data['size'],
-            'price'      => $data['price'],
-            'stock'      => $data['stock'] ?? 0,
-            'low_stock_threshold' => $data['low_stock_threshold'] ?? 5,
-            'image'      => $data['image']
-        ];
+        // $data = [
+        //     'product_id' => $data['product_id'],
+        //     'sku'        => $data['sku'],
+        //     'color'      => $data['color'],
+        //     'size'       => $data['size'],
+        //     'price'      => $data['price'],
+        //     'stock'      => $data['stock'] ?? 0,
+        //     'low_stock_threshold' => $data['low_stock_threshold'] ?? 5,
+        //     'image'      => $data['image']
+        // ];
+        // return $this->productVariantRepo->create($data);
 
-        return $this->productVariantRepo->create($data);
+        $productVariant = ProductVariantEntities::fromDTO($dto);
+
+        return $this->productVariantRepo->create($productVariant);
     }
 
     public function update(array $data, $id)
     {
+        // $productVariant = $this->productVariantRepo->findId($id);
+        // $data = [
+        //     'product_id' => $data['product_id'],
+        //     'sku'        => $data['sku'],
+        //     'color'      => $data['color'],
+        //     'size'       => $data['size'],
+        //     'price'      => $data['price'],
+        //     'stock'      => $data['stock'] ?? 0,
+        //     'low_stock_threshold' => $data['low_stock_threshold'] ?? 5,
+        //     'image'      => $data['image']
+        // ];
+        // return $this->productVariantRepo->update($productVariant, $data);
+
         $productVariant = $this->productVariantRepo->findId($id);
+
         $data = [
             'product_id' => $data['product_id'],
             'sku'        => $data['sku'],
@@ -50,7 +69,6 @@ class ProductVariantServices
             'low_stock_threshold' => $data['low_stock_threshold'] ?? 5,
             'image'      => $data['image']
         ];
-
         return $this->productVariantRepo->update($productVariant, $data);
     }
 

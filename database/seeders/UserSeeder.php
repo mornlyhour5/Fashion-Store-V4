@@ -6,6 +6,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 // use Illuminate\Support\Facades\DB;
 use App\Enums\Role;
+use Illuminate\Support\Facades\DB;
 
 class UserSeeder extends Seeder
 {
@@ -21,9 +22,10 @@ class UserSeeder extends Seeder
             'id' => 1,
             'name' => 'Guest User',
             'email' => 'guest@example.com',
+            'password' => '12345678'
         ];
 
-        // DB::table('users')->insert($user);
+        DB::table('users')->insert($user);
         // foreach ($code as $item) {
         //     DB::
         // }

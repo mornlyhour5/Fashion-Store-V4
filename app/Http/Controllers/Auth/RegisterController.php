@@ -67,7 +67,7 @@ class RegisterController extends Controller
     //     ], 201);
     // }
 
-public function register(Request $request)
+    public function register(Request $request)
     {
         try {
             $request->validate([
@@ -108,13 +108,13 @@ public function register(Request $request)
     }
 
     public function logout(Request $request)
-{
+    {
     Auth::guard('web')->logout();
     $request->session()->invalidate();
     $request->session()->regenerateToken();
 
-    return response()->json([
-        'message' => 'Logged out successfully'
-    ]);
-}
+        return response()->json([
+            'message' => 'Logged out successfully'
+        ]);
+    }
 }

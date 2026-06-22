@@ -2,6 +2,8 @@
 
 namespace App\Services\Product;
 
+use App\Domain\Entities\ProductImageEntities;
+use App\DTO\ProductImageDTO;
 use App\Repository\Product\ProductImageRepo;
 
 class ProductImageServices
@@ -21,16 +23,21 @@ class ProductImageServices
         return $this->productImageRepo->findId($id);
     }
 
-    public function create(array $data)
+    public function create(ProductImageDTO $dto)
     {
-        $data = [
-            'product_id' => $data['product_id'],
-            'image_url' => $data['image_url'],
-            'is_main' => $data['is_main'] ?? false,
-            'sort_order' => $data['sort_order'] ?? 0
-        ];
+        // $data = [
+        //     'product_id' => $data['product_id'],
+        //     'image_url' => $data['image_url'],
+        //     'is_main' => $data['is_main'] ?? false,
+        //     'sort_order' => $data['sort_order'] ?? 0
+        // ];
 
-        return $this->productImageRepo->create($data);
+        // return $this->productImageRepo->create($data);
+
+        $image = ProductImageEntities::fromDTO($dto);
+
+        return $this->productImageRepo->create($image);
+
     }
 
     public function update(array $data, $id)
