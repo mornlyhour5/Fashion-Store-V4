@@ -16,10 +16,10 @@ class ProductEntity
         private string  $name,
         //private string  $slug,
         private float   $base_price,
+        private string $image,
         private ?string $description  = null,
         private ?string $brand        = null,
         private int     $gender       = GenderProduct::UNISEX->value,
-        private ?string $image        = null,
         private int     $status       = ProductStatus::ACTIVE->value,
         private ?int    $views_count  = null,
     ) {}

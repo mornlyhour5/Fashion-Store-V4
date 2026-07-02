@@ -4,28 +4,32 @@ namespace App\Enums;
 
 enum ProductStatus: int
 {
-    case ACTIVE = 1;
-    case INACTIVE = 2;
-    case OUT_OF_STOCK = 3;
+    case ACTIVE      = 1;
+    case INACTIVE    = 0;
+    case OUT_OF_STOCK = 2;
 
-    public function label(): string
+    /**
+     * Convert string label from frontend → int value for DTO.
+     */
+    public static function fromString(?string $value): int
     {
-        return match ($this) { 
-            self::ACTIVE => 'Active',
-            self::INACTIVE => 'Inactive',
-            self::OUT_OF_STOCK => 'Out of Stock',
+        return match($value) {
+            'active'        => self::ACTIVE->value,
+            'inactive'      => self::INACTIVE->value,
+            'out_of_stock'  => self::OUT_OF_STOCK->value,
+            default         => self::ACTIVE->value,
         };
     }
 
-    // optional: for UI dropdown (all statuses)
-    public static function options(): array
+    /**
+     * Convert int back to string label for frontend.
+     */
+    public function toLabel(): string
     {
-        return array_map(
-            fn(self $case) => [
-                'value' => $case->value,
-                'label' => $case->label(),
-            ],
-            self::cases()
-        );
+        return match($this) {
+            self::ACTIVE        => 'active',
+            self::INACTIVE      => 'inactive',
+            self::OUT_OF_STOCK  => 'out_of_stock',
+        };
     }
 }

@@ -9,14 +9,11 @@ use Illuminate\Http\Request;
 class {{ name }}Controller extends Controller
 {
 
-    public function __construct(protected {{ name }}Services ${{ name }}services)
-    {
-        $this->{{ name }}services = ${{ name }}services;
-    }
+    public function __construct(protected {{ name }}Services ${{ name }}services){}
 
     public function index()
     {
-
+        
     }
 
     public function show($id)

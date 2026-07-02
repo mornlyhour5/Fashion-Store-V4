@@ -2,6 +2,8 @@
 
 namespace App\Helpers;
 
+use App\DTO\AbstractpaginationDTO;
+
 class ApiResponse
 {
     public static function success($data = null, $message = "Success", $code = 200) {
@@ -23,25 +25,25 @@ class ApiResponse
     }
 
     public static function exception(\Exception $e): \Illuminate\Http\JsonResponse
-{
-    // Handle Laravel validation exceptions specifically
-    if ($e instanceof \Illuminate\Validation\ValidationException) {
-        return response()->json([
-            'error'   => true,
-            'status'  => 'error',
-            'message' => $e->getMessage(),
-            'errors'  => $e->errors(),   // field-level errors e.g. {"name": ["The name field is required."]}
-            'data'    => null
-        ], 422);
-    }
+    {
+        // Handle Laravel validation exceptions specifically
+        if ($e instanceof \Illuminate\Validation\ValidationException) {
+            return response()->json([
+                'error'   => true,
+                'status'  => 'error',
+                'message' => $e->getMessage(),
+                'errors'  => $e->errors(),   // field-level errors e.g. {"name": ["The name field is required."]}
+                'data'    => null
+            ], 422);
+        }
 
-    // Fallback for all other exceptions
-    return self::error(
-        $e->getCode() ?: 500,
-        'error',
-        $e->getMessage() ?: 'Something went wrong'
-    );
-}
+        // Fallback for all other exceptions
+        return self::error(
+            $e->getCode() ?: 500,
+            'error',
+            $e->getMessage() ?: 'Something went wrong'
+        );
+    }
 
     public static function flex($object = null, $message = null, $statusCode = null){
         $statusCode = $statusCode
@@ -68,6 +70,30 @@ class ApiResponse
             'data' => $data
         ];
 
+        return response()->json($response, $statusCode);
+    }
+
+    public static function paginate(AbstractpaginationDTO $pagination, $message = null, $statusCode = 200)
+    {
+        $statusText = match(true) {
+            $statusCode >= 200 && $statusCode < 300 => 'OK',
+            $statusCode >= 400 && $statusCode < 500 => 'Client Error',
+            $statusCode >= 500 => 'Server Error',
+            default => 'Unknowm'
+        };
+
+        $response = [
+            'error' => false,
+            'status' => $statusText,
+            'message' => $message,
+            'pagination' => [
+                'perPage' => $pagination->perPage,
+                'total' => $pagination->total,
+                'totalPage' => $pagination->totalPage,
+                'pageNo' => $pagination->pageNo,
+            ],
+            'data' => $pagination->data,
+        ];
         return response()->json($response, $statusCode);
     }
 

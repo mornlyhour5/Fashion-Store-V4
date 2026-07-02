@@ -15,6 +15,7 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Order\OrderItemController;
 use App\Http\Controllers\Order\OrderStatusHistoryController;
+use App\Http\Controllers\Product\BrandController;
 use App\Http\Controllers\ProductsController;
 // use App\Models\Customers;
 use Illuminate\Http\Request;
@@ -151,4 +152,9 @@ Route::put('/Order-status-history/{id}', [OrderStatusHistoryController::class, '
 Route::delete('/Order-status-history/{id}', [OrderStatusHistoryController::class, 'delete']);
 
 
-
+Route::get('/brand',         [BrandController::class, 'index']);
+Route::post('/brand',        [BrandController::class, 'store']);
+// Route::get('brand',          [BrandController::class, 'getBrandPagination']);
+Route::get('/brand/{id}',    [BrandController::class, 'show']);
+Route::put('/brand/{id}',    [BrandController::class, 'update']);
+Route::delete('/brand/{id}', [BrandController::class, 'delete']);

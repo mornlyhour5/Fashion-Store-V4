@@ -26,11 +26,11 @@ class CategoryRepo
         return Categories::create($data);
     }
 
-    public function update(Categories $categories, array $data)
+    public function update(int $id, array $data)
     {
-        $categories->update($data);
-
-        return $categories->fresh();
+        $category = Categories::findOrFail($id);
+        $category->update($data);
+        return $category->fresh();
     }
 
     public function delete(Categories $categories)

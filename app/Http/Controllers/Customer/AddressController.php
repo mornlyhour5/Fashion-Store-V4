@@ -20,7 +20,7 @@ class AddressController extends Controller
         return ApiResponse::success($this->addressService->getByUserId($userId));
     }
 
-    public function show(Request $request, $id)
+    public function show($id)
     {
         return ApiResponse::success($this->addressService->getWhereId($id));
     }

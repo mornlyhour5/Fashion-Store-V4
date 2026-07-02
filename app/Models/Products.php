@@ -9,6 +9,7 @@ use App\Enums\ProductStatus;
 class Products extends Model
 {
     protected $table = 'products';
+    protected $appends = ['image_url'];
 
     protected $fillable = [
         'category_id',
@@ -37,4 +38,15 @@ class Products extends Model
         'status' => ProductStatus::class,
         'gender' => GenderProduct::class, // 👈 added
     ];
+
+    public function getImageUrlAttribute(): ?string
+    {
+        if (empty($this->image)) {
+            return null;
+        }
+
+        // Build the public URL to match where HelperMedia saves the file:
+        // public/uploads/images/{bucket}/{dirName}/{filename}
+        return asset('uploads/images/' . \App\Enums\ImageBuket::COMPANY->value . '/' . \App\Enums\ImageDirectory::PRODUCT->value . '/' . $this->image);
+    }
 }
