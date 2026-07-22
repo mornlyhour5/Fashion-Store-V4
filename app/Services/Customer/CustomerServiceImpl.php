@@ -13,17 +13,17 @@ class CustomerServiceImpl implements CustomerService
         protected UserRepository $userRepository
     ) {}
 
-    public function getAllcustomer()
+    public function getAllcustomer() //get customer from table user where role customer
     {
         return $this->customerRepository->getAll();
     }
 
-    public function getAllUser(array $filters = [])
+    public function getAllUser(array $filters = []) // get data from repisitory customer where role
     {
         return $this->userRepository->getUser($filters);
     }
 
-    public function getAllStaff(array $filters = [])
+    public function getAllStaff(array $filters = []) // get data from repisitory staff where role
     {
          return $this->customerRepository->getStaff();
     }

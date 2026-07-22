@@ -26,7 +26,7 @@ class CustomerController extends Controller
         return ApiResponse::success($this->customerService->getAllcustomer());
     }
 
-    public function getuser(Request $request)
+    public function getuser(Request $request) // request data get role customer only
     {
         return ApiResponse::success(
             $this->customerService->getAllUser([
