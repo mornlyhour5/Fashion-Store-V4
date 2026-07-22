@@ -27,19 +27,18 @@ class Handler extends ExceptionHandler
 
     public function render($request, Throwable $e)
     {
+        dd([
+        'exception' => get_class($e),
+        'message'   => $e->getMessage(),
+        'file'      => $e->getFile(),
+        'line'      => $e->getLine(),
+    ]);
         if ($e instanceof ThrottleRequestsException) {
             return ApiResponse::ManyRequest();
         }
 
         if ($e instanceof BindingResolutionException) {
-            if ($request->is('api/*')) {
-                return ApiResponse::error(
-                    500,
-                    'Internal Server Error',
-                    'Something went wrong on the server. Please contact support if the issue persists.'
-                );
-            }
-            return parent::render($request, $e);
+            dd($e->getMessage());
         }
         if($request->wantsJson() || str_starts_with($request->path(), 'api/')){
 
@@ -59,7 +58,7 @@ class Handler extends ExceptionHandler
                 return ApiResponse::error(409, 'Duplicated', $e->getMessage());
             }
             if ($e instanceof UnexpectedExcept) {
-                return ApiResponse::error(500, 'Internal Server Error', 'Internal Server Error');
+                return ApiResponse::error(500, 'Error', 'Internal Server Error');
             }
 
             if ($e instanceof HttpException) {

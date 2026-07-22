@@ -84,7 +84,11 @@ class HelperPagination
         $rows = $rows !== null ? json_decode($rows, true) : null;
 
         if($rows === null) {
-            if ($sort) $query->orderByRaw($sort);
+            if ($sort) {
+            $direction = str_starts_with($sort, '-') ? 'desc' : 'asc';
+            $column = ltrim($sort, '-');
+            $query->orderBy($column, $direction);
+        }
             $offset = ($page - 1) * $perPage;
 
             $rows = $query->offset($offset)

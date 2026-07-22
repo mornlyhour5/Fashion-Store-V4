@@ -8,14 +8,18 @@ namespace App\Http\Controllers\Product;
 // use App\Exceptions\BadRequestExcept;
 use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
+use App\Services\Contracts\BrandService;
 use App\Services\Contracts\ProductServices;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    public function __construct(protected ProductServices $productservices) {}
+    public function __construct(
+        protected ProductServices $productservices,
+        protected BrandService $brandService
+        ) {}
 
-    public function index()
+    public function index(Request $request)
     {
         return ApiResponse::success($this->productservices->getAllProduct());
     }

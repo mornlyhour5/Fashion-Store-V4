@@ -5,7 +5,10 @@ namespace App\Repository;
 use App\Domain\AuthUser;
 use App\DTO\PaginationDTO;
 use App\Exceptions\NotFoundExcept;
+use App\Exceptions\UnauthExcept;
+use App\Helpers\Helper;
 use App\Helpers\HelperPagination;
+use App\Models\User;
 use Closure;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
@@ -30,6 +33,9 @@ use Illuminate\Database\Eloquent\Builder;
 //     }
 // }
 
+
+
+
 abstract class BaseRepositoryImpl implements BaseRepository
 {
     protected ?AuthUser $actingUser = null;
@@ -52,6 +58,25 @@ abstract class BaseRepositoryImpl implements BaseRepository
         return $this->model->whereNull('deleted_at')->get();
     }
 
+    public function getUser(array $filters = [])
+    {
+        $query = $this->model->newQuery();
+
+        // Always show only Staff and Customers
+        $query->whereIn('role', [3]);
+
+        if (!empty($filters['search'])) {
+            $search = $filters['search'];
+
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'ILIKE', "%{$search}%")
+                ->orWhere('email', 'ILIKE', "%{$search}%");
+            });
+        }
+
+        return $query->latest()->paginate($filters['per_page'] ?? 15);
+    }
+
     public function findById(int $id, array $select = ['*']): ?Model
     {
         return $this->model->select($select)->find($id);
@@ -66,6 +91,79 @@ abstract class BaseRepositoryImpl implements BaseRepository
         }
 
         return $query->first();
+    }
+
+    public function getStaff(array $filters = [])
+    {
+        $query = $this->model->newQuery();
+
+        $query->where('role', \App\Enums\Role::STAFF->value); // role = 2 only
+
+        if (!empty($filters['search'])) {
+            $search = $filters['search'];
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'ILIKE', "%{$search}%")
+                ->orWhere('email', 'ILIKE', "%{$search}%");
+            });
+        }
+
+        return $query->latest()->paginate($filters['per_page'] ?? 15);
+    }
+
+    public function getByVariant(int $variantId): Collection
+    {
+        return $this->model->where('product_variant_id', $variantId)
+            ->orderBy('sort_order')
+            ->get();
+    }
+
+    public function setActingUser(?AuthUser $user): static
+    {
+        $this->actingUser = $user;
+        return $this;
+    }
+
+    public function countByVariant(int $variantId)
+    {
+        return $this->model->where('product_variant_id', $variantId)->count();
+    }
+
+    public function clearMainForVariant(int $variantId)
+    {
+        return $this->model->where('product_variant_id', $variantId)->update(['is_main' => false]);
+    }
+
+    public function bulkInsert(array $rows): bool
+    {
+        if(!$this->actingUser) {
+            throw new UnauthExcept();
+        }
+        Helper::mergeIntoEach($rows, [
+            'created_at' => now()
+        ]);
+        return $this->model->insert($rows);
+    }
+
+    public function lastId()
+    {
+        return $this->model
+        ->newQuery()
+        ->lockForUpdate()
+        ->latest('order_number')
+        ->first();
+    }
+
+    public function query(array $select = ['*']): Builder
+    {
+        return $this->model->newQuery()->select($select);
+    }
+
+    public function findByEmail(string $email): ?User
+    {
+        return $this->model
+            ->where('email', $email)
+            ->whereNull('deleted_at')
+            ->first();
     }
 
     public function updateById(int $id, array $data): ?Model
@@ -116,10 +214,10 @@ abstract class BaseRepositoryImpl implements BaseRepository
         return $query->exists();
     }
 
-    public function query(array $select = ['*']): Builder
-    {
-        return $this->model->newQuery()->select($select);
-    }
+    // public function query(array $select = ['*']): Builder
+    // {
+    //     return $this->model->newQuery()->select($select);
+    // }
 
     public function pagination(
         array $fileters,
@@ -202,6 +300,37 @@ abstract class BaseRepositoryImpl implements BaseRepository
         );
     }
 
+
+    public function pagination_wish(
+    array $fileters,
+    array $select = ['*'],
+    ?array $conditions = [],
+    int $limit = 100,
+    bool $withTotal = true,
+    string $rawSort = '',
+    ?callable $callbackFunc = null,
+    array $additionalResult = [],
+    ?int $cacheMin = 10,
+    array $catchTage = [],
+    ?array $with = [],
+    ?callable $beforeQuery = null
+): PaginationDTO {
+    return $this->pagination(
+        fileters: $fileters,
+        select: $select,
+        conditions: $conditions,
+        limit: $limit,
+        withTotal: $withTotal,
+        rawSort: $rawSort,
+        callbackFunc: $callbackFunc,
+        additionalResult: $additionalResult,
+        cacheMin: $cacheMin,
+        catchTage: $catchTage,
+        with: $with,
+        beforeQuery: $beforeQuery
+    );
+}
+
     // public function updateupdateById(int $id, array $data, array $conditions = ['deleted_at' => null], $throwIfNotFound = 'Resource not found'): ?Model
     // {
     //     $record = $this->model->where('id', $id);
@@ -216,4 +345,30 @@ abstract class BaseRepositoryImpl implements BaseRepository
     //     $record->update($data);
     //     return $record;
     // }
+    public function findByEmailWithConditions(string $email, array $select = ['*'], array $conditions = []): ?Model
+    {
+        $query = $this->model->select($select)->where('email', $email);
+
+        foreach ($conditions as $column => $value) {
+            if (is_null($value)) {
+                $query->whereNull($column);
+            } else {
+                $query->where($column, $value);
+            }
+        }
+
+        return $query->first();
+    }
+
+    public function findAllWithRelations(): Collection
+    {
+        return $this->model
+            ->with([
+                'customer:id,name,email',
+                'customer.customerProfile:id,user_id,first_name,last_name,phone',
+            ])
+            ->withCount('orderItems')
+            ->latest()
+            ->get();
+    }
 }

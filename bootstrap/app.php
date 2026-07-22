@@ -13,6 +13,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->statefulApi();
+        $middleware->append(\Illuminate\Http\Middleware\HandleCors::class);
     })
     ->withProviders([
         App\Providers\FortifyServiceProvider::class,

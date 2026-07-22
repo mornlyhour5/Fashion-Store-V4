@@ -16,17 +16,26 @@ class Products extends Model
         'name',
         'slug',
         'description',
-        'brand',
+        'brand_id',
         'base_price',
-        'gender',
+        'thumbnail',
+        'views_count',
         'status',
-        'image',
-        'views_count'
+        'gender',
+        'short_description',
+        'country_of_origin',
+        'weight',
+        'is_featured'
     ];
 
     public function variants()
     {
         return $this->hasMany(Product_Variants::class, 'product_id');
+    }
+
+    public function brand()
+    {
+        return $this->belongsTo(Brand::class, 'brand_id');
     }
 
     public function images()
@@ -40,13 +49,11 @@ class Products extends Model
     ];
 
     public function getImageUrlAttribute(): ?string
-    {
-        if (empty($this->image)) {
-            return null;
-        }
-
-        // Build the public URL to match where HelperMedia saves the file:
-        // public/uploads/images/{bucket}/{dirName}/{filename}
-        return asset('uploads/images/' . \App\Enums\ImageBuket::COMPANY->value . '/' . \App\Enums\ImageDirectory::PRODUCT->value . '/' . $this->image);
+{
+    if (empty($this->thumbnail)) {   // 👈 renamed from "image"
+        return null;
     }
+
+    return asset('uploads/images/' . \App\Enums\ImageBuket::COMPANY->value . '/' . \App\Enums\ImageDirectory::PRODUCT->value . '/' . $this->thumbnail);
+}
 }

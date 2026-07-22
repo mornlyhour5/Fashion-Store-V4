@@ -28,7 +28,6 @@ class Customers extends Model
         'date_of_birth' => 'date',
     ];
 
-
     public function user()
     {
         return $this->belongsTo(User::class);

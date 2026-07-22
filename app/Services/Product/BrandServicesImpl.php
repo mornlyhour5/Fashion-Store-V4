@@ -5,6 +5,7 @@ namespace App\Services\Product;
 // use App\DTO\PaginationDTO;
 use App\Enums\ImageBuket;
 use App\Enums\ImageDirectory;
+use App\Enums\Status;
 use App\Exceptions\DuplicateExcept;
 use App\Exceptions\NotFoundExcept;
 use App\Helpers\CustomValidator;
@@ -27,8 +28,8 @@ class BrandServicesImpl implements BrandService
             'name'        => 'required|string|max:255',
             'slug'        => 'nullable|string|max:255',
             'description' => 'nullable|string|max:1000',
-            'logo'         => 'nullable',
-            'status'      => 'nullable|boolean',
+            'logo'        => 'nullable',
+            'status'      => 'nullable' ?? Status::ACTIVE->value,
             'sort_order'  => 'nullable|integer',
             'link'        => 'nullable|string|max:255',
         ];
@@ -63,13 +64,10 @@ class BrandServicesImpl implements BrandService
         if ($logoFile) {
             $result = HelperMedia::saveImageFileOrBase64(
                 $logoFile,
-                'image',                          // $type
-                ImageBuket::COMPANY->value,        // $bucket  e.g. 'company'
-                ImageDirectory::BRAND->value       // $dirName e.g. 'brands'
-            )->filename;
+                ImageBuket::COMPANY->value,
+                ImageDirectory::BRAND->value
+            );
 
-            // saveUploadedFile returns an object {filename, ext, path, mime}
-            // We only store the filename in the DB column
             $validated['logo'] = $result->filename ?? null;
         }
 

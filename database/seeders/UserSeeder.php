@@ -19,7 +19,6 @@ class UserSeeder extends Seeder
         ];
 
         $user = [
-            'id' => 1,
             'name' => 'Guest User',
             'email' => 'guest@example.com',
             'password' => '12345678'

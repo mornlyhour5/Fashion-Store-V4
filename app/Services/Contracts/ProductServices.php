@@ -13,13 +13,9 @@ interface ProductServices
 
     public function create(Request $request): Model;
 
-    /**
-     * Update an existing product by ID and return the update model.
-     */
     public function update(Request $request, int $id): mixed;
 
-    /**
-     * Delete a product by ID.
-     */
     public function delete(int $id): void;
+
+    public function implementData(array $data): mixed;
 }

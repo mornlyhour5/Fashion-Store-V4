@@ -2,10 +2,12 @@
 
 namespace App\Services\Product;
 
+use App\Enums\FeaturedStatus;
 use App\Enums\GenderProduct;
 use App\Enums\ImageBuket;
 use App\Enums\ImageDirectory;
 use App\Enums\ProductStatus;
+// use App\Enums\Status;
 use App\Exceptions\DuplicateExcept;
 use App\Exceptions\NotFoundExcept;
 use App\Helpers\CustomValidator;
@@ -14,6 +16,7 @@ use App\Repository\Contracts\ProductRepository;
 use App\Services\Contracts\ProductServices;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+// use Illuminate\Support\Facades\DB;
 
 class ProductServicesImpl implements ProductServices
 {
@@ -28,14 +31,18 @@ class ProductServicesImpl implements ProductServices
             'category_id'  => 'nullable|exists:categories,id',
             'name'         => 'required|string|max:255',
             'slug'         => 'nullable',
-            'base_price'   => 'nullable|numeric|min:0.01',
-            'stock'        => 'nullable|integer|min:0',
             'description'  => 'nullable|string',
-            'brand'        => 'nullable|string|max:100',
-            'size'         => 'nullable|string|max:50',
-            'gender'       => 'nullable' ?? GenderProduct::UNISEX->value,
-            'image'        => 'nullable',
+            'brand_id'     => 'nullable|exists:brand,id',
+            'base_price'   => 'nullable|numeric|min:0.01',
+            'thumbnail'    => 'nullable',
+            'views_count'  => 'nullable',
             'status'       => 'nullable' ?? ProductStatus::ACTIVE->value,
+            'gender'       => 'nullable' ?? GenderProduct::UNISEX->value,
+            'short_description' => 'nullable',
+            'country_of_origin' => 'nullable',
+            // 'stock'        => 'nullable|integer|min:0',
+            'weight'       => 'nullable',
+            'is_featured'  => 'nullable' ?? FeaturedStatus::NOT_FEATURED->value,
         ];
         return $this->validator->validate($data, $rules);
     }
@@ -63,16 +70,15 @@ class ProductServicesImpl implements ProductServices
     {
         $validated = $this->ProductValidator($request->all());
 
-        $imageFile = $request->file('image');
+        $imageFile = $request->file('thumbnail');
         if ($imageFile) {
             $result = HelperMedia::saveImageFileOrBase64(
                 $imageFile,
-                'image',
                 ImageBuket::COMPANY->value,
                 ImageDirectory::PRODUCT->value
-            )->filename;
+            );
 
-            $validated['image'] = $result->filename ?? null;
+            $validated['thumbnail'] = $result->filename ?? null;
         }
 
         return $this->productrepository->create($validated);
@@ -97,7 +103,7 @@ class ProductServicesImpl implements ProductServices
             ]));
         }
 
-        $imageFile = $request->file('image');
+        $imageFile = $request->file('thumbnail');
         if ($imageFile) {
             if (!empty($product->image)) {
                 HelperMedia::deleteUploadedFile(
@@ -115,7 +121,7 @@ class ProductServicesImpl implements ProductServices
                 ImageBuket::COMPANY->value,
                 ImageDirectory::PRODUCT->value
             );
-        $validated['image'] = $result->filename ?? null;
+        $validated['thumbnail'] = $result->filename ?? null;
         }
         $this->productrepository->updateById($id, $validated);
         return $this->productrepository->findById($id);
@@ -147,5 +153,13 @@ class ProductServicesImpl implements ProductServices
         //         }
         //     );
 
+    }
+
+    public function implementData(array $data): mixed
+    {
+        // try {
+        //     return DB::transaction(function () use ($data,))
+        // }
+        throw new ('dkfjghdfg');
     }
 }

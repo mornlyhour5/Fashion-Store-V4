@@ -11,7 +11,8 @@ abstract class AbstractUserLoginDTO implements Arrayable
 
     public function __construct(
         public readonly int $id,
-        public readonly string $email,
-        public readonly string $password,
+        public readonly string $name,
+        public readonly ?string $profile,
+        public readonly string $token,
     ) {}
 }

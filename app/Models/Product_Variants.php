@@ -13,10 +13,9 @@ class Product_Variants extends Model
         'sku',
         'color',
         'size',
-        'price',
-        'stock',
+        'unit_price',
+        'quantity',
         'low_stock_threshold',
-        'image'
     ];
 
     public function product()
@@ -24,8 +23,8 @@ class Product_Variants extends Model
         return $this->belongsTo(Products::class, 'product_id');
     }
 
-    public function Product_images()
+    public function productImages()
     {
-        return $this->hasMany(Product_Images::class, 'product_variant_id');
+        return $this->hasMany(Product_Images::class, 'product_variant_id')->orderBy('sort_order');
     }
 }

@@ -1,5 +1,5 @@
 <?php
-
+//                      this name 1
 namespace App\Helpers;
 
 use App\Exceptions\BadRequestExcept;
@@ -15,7 +15,7 @@ class HelperMedia
     public static function getImageUrl(
         string $bucket,
         string $dirName,
-        string $fileName,
+        ?string $fileName,
         ?string $subDir = null,
         ?string $defualt = null
     ): ?string {
@@ -28,7 +28,7 @@ class HelperMedia
         ];
 
         if ($subDir) {
-            $paths[] = public_path("uploads/images/{$bucket}/{$dirName}/{$fileName}");
+            $paths[] = public_path("uploads/images/{$bucket}/{$dirName}/{$subDir}/{$fileName}");
         }
 
         $public = str_replace('\\', '/', public_path()) . '/';
@@ -118,7 +118,7 @@ class HelperMedia
                 }
 
                 $relative = str_replace(public_path() . '/', '', $path);
-                return $defualt ? asset($defualt) : null;
+                return asset($relative);
             }
         }
         return $defualt ? asset($defualt) : null;
@@ -209,7 +209,7 @@ class HelperMedia
         } else {
             return (object)[
                 'path'     => null,
-                'fielname' => null
+                'filename' => null
             ];
         }
     }
@@ -227,7 +227,7 @@ class HelperMedia
         $isImage = ($image instanceof UploadedFile) || self::isValidBase64Image($image);
 
         if ($throw && !$isImage) {
-            throw new BadRequestExcept(__('validation,image', ['attribute' => 'image']));
+            throw new BadRequestExcept(__('validation.image', ['attribute' => 'image']));
         }
 
         return $isImage;
@@ -308,7 +308,7 @@ class HelperMedia
         $validMimeTypes = [
             'image' => [
                 'image/jpeg',
-                'image/pne',
+                'image/png',
                 'image/jpg',
                 'image/gif',
                 'image/heic',

@@ -36,7 +36,7 @@
         <div id="login-section">
             <h2 class="text-xl font-semibold text-zinc-200 mb-6 tracking-wide">Sign In</h2>
 
-            <form method="POST" action="{{ route('login') }}" class="space-y-5">
+            <form method="POST" action="{{ url('/api/login') }}">
                 @csrf
                 <div>
                     <label class="block text-xs font-semibold text-amber-400/80 uppercase tracking-wider mb-2">Email Address</label>

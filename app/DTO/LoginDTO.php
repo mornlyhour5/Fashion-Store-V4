@@ -2,26 +2,29 @@
 
 namespace App\DTO;
 
-class LoginDTO extends AbstractUserLoginDTO
+use App\Traits\ArrayableTrait;
+use Illuminate\Contracts\Support\Arrayable;
+
+class LoginDTO implements Arrayable
 {
+    use ArrayableTrait;
+
     public function __construct(
-        int $id,
-        string $email,
-        string $password,
-        public readonly array $modules = [],
-        public readonly array $permissions = [],
-    ) {
-        parent::__construct($id, $email, $password);
-    }
+        public readonly int $id,
+        public readonly string $name,
+        public readonly string $email,
+        public readonly string $role,
+        public readonly ?string $avatar = null,
+    ) {}
 
     public function toArray(): array
     {
-        return array_merge(
-            parent::toArray(),
-            [
-                'modules'     => $this->modules,
-                'permissions' => $this->permissions,
-            ]
-        );
+        return [
+            'id'     => $this->id,
+            'name'   => $this->name,
+            'email'  => $this->email,
+            'role'   => $this->role,
+            'avatar' => $this->avatar,
+        ];
     }
 }

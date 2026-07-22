@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Orders extends Model
 {
@@ -32,9 +34,14 @@ class Orders extends Model
         return $this->hasMany(Order_Items::class, 'order_id');
     }
 
-    public function user()
+    public function customer(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    public function orderItems(): HasMany
+    {
+        return $this->hasMany(Order_Items::class, 'order_id', 'id');
     }
 
     public function address()

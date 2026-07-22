@@ -2,132 +2,94 @@
 
 namespace App\Http\Controllers\Product;
 
-use App\DTO\ProductImageDTO;
 use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\ProductImageResource;
-use App\Services\Product\ProductImageServices;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Services\Contracts\ProductImageServices;
+use App\Services\Contracts\ProductVariantServices;
 use Illuminate\Http\Request;
 
 class ProductImageController extends Controller
 {
-    public function __construct(protected ProductImageServices $productImageServices)
+    public function __construct(
+        protected ProductImageServices $productImageServices,
+        protected ProductVariantServices $productVariantServices
+        ) {}
+
+    // public function index(Request $request)
+    // {
+    //     if ($request->has('product_id')) {
+    //         // Filter by product_id so frontend gets only this product's variants
+    //         $variants = $this->productVariantServices->getAllVariant()
+    //             ->where('product_id', $request->product_id)
+    //             ->values();
+    //     }
+    //     if ($request->has('product_id')) {
+    //         $images = $this->productImageServices->getAllProductImage()
+    //             ->where('product_variant_id', $request->$variants)
+    //             ->values();
+    //         return ApiResponse::success($images);
+    //     }
+    //     // return ApiResponse::success($this->productImageServices->getAllProductImage());
+    // }
+
+    public function index(Request $request)
     {
-        $this->productImageServices = $productImageServices;
+
+        // If product_id exists, filter variants first
+        // if ($request->has('product_id')) {
+
+        //     // 1. Get variants by product_id
+        //     $variants = $this->productVariantServices
+        //         ->getAllVariant()
+        //         ->where('product_id', $request->product_id)
+        //         ->values();
+
+        //     // 2. Extract variant IDs
+        //     $variantIds = $variants->pluck('id');
+
+        //     // 3. Get images by variant IDs
+        //     $images = $this->productImageServices
+        //         ->getAllProductImage()
+        //         ->whereIn('product_variant_id', $variantIds)
+        //         ->values();
+
+        //     return ApiResponse::success($images);
+        // }
+
+        // // Default: return all images
+        return ApiResponse::success(
+            $this->productImageServices->getAllProductImage($request)
+        );
     }
 
-    public function index()
+    public function show(Request $request,int $id)
     {
-        // return ApiResponse::success($this->productImageServices->getAll());
+        $image = $this->productImageServices->getProductImageWhereId($request, $id);
 
-        try{
-            $image = $this->productImageServices->getAll();
-
-            return ApiResponse::success(
-                data: ProductImageResource::collection($image),
-                message: 'Product Image retrieved successfully.',
-                code: 200
-            );
-        } catch (\Exception $e){
-            return ApiResponse::exception($e);
-        }
-    }
-
-    public function show($id)
-    {
-        // return ApiResponse::success($this->);
-        try {
-            $image = $this->productImageServices->getWhereId($id);
-
-            return ApiResponse::success(
-                data: new ProductImageResource($image),
-                message: 'Product image retrived successfully.',
-                code: 200
-            );
-        } catch (\Exception $e) {
-            return ApiResponse::error(
-                code: 404,
-                status: 'Not Found',
-                message: 'Product Image not found'
-            );
-        } catch (\Exception $e){
-            return ApiResponse::exception($e);
-        }
+        return ApiResponse::success($image);
     }
 
     public function store(Request $request)
     {
-        // return ApiResponse::success($this->productImageServices->create($request->all()));
-        try {
-            $dto = ProductImageDTO::fromRequest($request);
+        $image = $this->productImageServices->create($request);
 
-            $image = $this->productImageServices->create($dto);
-
-            return ApiResponse::success(
-                data: new ProductImageResource($image),
-                message: 'Product image insert successfully',
-                code: 201
-            );
-        } catch(ModelNotFoundException $e){
-            return ApiResponse::error(
-                code: 400,
-                status: 'Bad request',
-                message: 'Insert product image fail'
-            );
-        } catch (\Exception $e){
-            return ApiResponse::exception($e);
-        }
+        return ApiResponse::success($image);
     }
 
-    public function update(Request $request ,$id)
+    public function update(Request $request,int $id)
     {
-        // return ApiResponse::success($this->productImageServices->update($request->all(), $id));
-        try {
-            $validate = $request->validate([
-                'product_id'         => 'required|exists:products,id',
-                'image_url'          => 'required|string|max:1000',
-                'is_main'            => 'nullable',
-                'sort_order'         => 'required|integer|min:0',
-                'product_variant_id' => 'nullable|exists:product_variants,id'
-            ]);
+                // 'product_id'         => 'required|exists:products,id',
+                // 'image_url'          => 'required|string|max:1000',
+                // 'is_main'            => 'nullable',
+                // 'sort_order'         => 'required|integer|min:0',
+                // 'product_variant_id' => 'nullable|exists:product_variants,id'
+        $image = $this->productImageServices->update($request, $id);
 
-            $image = $this->productImageServices->update($validate, $id);
-
-            return ApiResponse::success(
-                data: new ProductImageResource($image),
-                message: 'Product image update successfully'
-            );
-
-        } catch (ModelNotFoundException $e){
-            return ApiResponse::error(
-                code: 404,
-                status: 'Not found',
-                message: 'Product image not found'
-            );
-        } catch (\Exception $e){
-            return ApiResponse::exception($e);
-        }
+        return ApiResponse::success($image);
     }
 
-    public function delete($id)
+    public function delete(int $id)
     {
-        // return ApiResponse::success($this->productImageServices->delete($id));
-        try{
-            $this->productImageServices->delete($id);
-
-            return ApiResponse::success(
-                message: 'Product Image delete successfully'
-            );
-
-        } catch (ModelNotFoundException $e) {
-            return ApiResponse::error(
-                code: 404,
-                status: 'Not found',
-                message: 'Product image not found'
-            );
-        } catch(\Exception $e) {
-            return ApiResponse::exception($e);
-        }
+        return ApiResponse::success($this->productImageServices->delete($id));
     }
 }

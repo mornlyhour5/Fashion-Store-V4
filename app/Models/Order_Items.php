@@ -12,18 +12,20 @@ class Order_Items extends Model
         'order_id',
         'product_variant_id',
         'product_id',
-        'product_name',
         'sku',
         'color',
         'size',
         'quantity',
         'price',
-        'subtotal'
+        'discount',
+        'net_amount',
+        'tax_rate',
+        'tax_amount'
     ];
 
-    public function orders()
+    public function order()
     {
-        return $this->hasMany(Orders::class);
+        return $this->belongsTo(Orders::class, 'order_id');
     }
 
     public function productVariant()

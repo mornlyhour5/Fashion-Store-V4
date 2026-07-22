@@ -8,8 +8,10 @@
         "php": "^8.2",
         "laravel/fortify": "^1.37",
         "laravel/framework": "^11.0",
+        "laravel/passport": "^13.7",
         "laravel/sanctum": "^4.3",
         "laravel/tinker": "^2.9",
+        "maatwebsite/excel": "^3.1",
         "php-open-source-saver/jwt-auth": "^2.8"
     },
     "require-dev": {

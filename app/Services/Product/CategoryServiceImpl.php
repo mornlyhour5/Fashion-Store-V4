@@ -44,6 +44,24 @@ class CategoryServiceImpl implements CategoryServices
         return $this->categoryrepository->getAll();
     }
 
+    // public function create(Request $request): Model
+    // {
+    //     $validated = $this->categoryValidator($request->all());
+
+    //     $imageFile = $request->file('image');
+    //     if ($imageFile) {
+    //         $result = HelperMedia::saveImageFileOrBase64(
+    //             $imageFile,
+    //             'image',
+    //             ImageBuket::COMPANY->value,
+    //             ImageDirectory::CATEGORIES->value
+    //         )->filename;
+
+    //         $validated['image'] = $result->filename ?? null;
+    //     }
+
+    //     return $this->categoryrepository->create($validated);
+    // }
     public function create(Request $request): Model
     {
         $validated = $this->categoryValidator($request->all());
@@ -52,10 +70,9 @@ class CategoryServiceImpl implements CategoryServices
         if ($imageFile) {
             $result = HelperMedia::saveImageFileOrBase64(
                 $imageFile,
-                'image',
                 ImageBuket::COMPANY->value,
                 ImageDirectory::CATEGORIES->value
-            )->filename;
+            );
 
             $validated['image'] = $result->filename ?? null;
         }
