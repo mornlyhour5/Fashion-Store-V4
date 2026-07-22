@@ -17,6 +17,7 @@ class CouponServiceImpl implements CouponService
         protected CustomValidator $validator
     ) {}
 
+    // version 1 build for admin only
     private function Coupon(array $data)
     {
         $rules = [
@@ -76,7 +77,6 @@ class CouponServiceImpl implements CouponService
                 'info' => 'general.coupon'
             ]));
         }
-
         $this->coupon->deleteById($id);
     }
 
