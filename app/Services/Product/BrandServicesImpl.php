@@ -75,30 +75,6 @@ class BrandServicesImpl implements BrandService
         return $this->brandrepository->create($validated);
     }
 
-    // public function getBrandPaginaftion(array $filters = []): PaginationDTO
-    // {
-    //     return $this->brandrepository->pagination(
-    //         fileters: $filters,
-    //         select: [
-    //             'id',
-    //             'name',
-    //             'description'
-    //         ],
-    //         rawSort: 'id desc',
-    //         conditions: [
-    //             'deleted_at' => null,
-    //             function ($query) use ($filters) {
-    //                 if (!empty($filters['search'])) {
-    //                     $search = '%' . $filters['search'] . '%';
-    //                     $query->where(function ($q) use ($search) {
-    //                         $q->where('name', 'ILIKE', $search);
-    //                     });
-    //                 }
-    //             },
-    //         ],
-    //     );
-    // }
-
     public function updateBrandById(Request $request, int $id): mixed
     {
         // 1. Make sure brand exists
@@ -159,17 +135,6 @@ class BrandServicesImpl implements BrandService
                 'info' => __('general.brand')
             ]));
         }
-
-        // Delete logo file from disk when deleting the brand
-        // if (!empty($brand->logo)) {
-        //     HelperMedia::deleteUploadedFile(
-        //         'image',
-        //         ImageBuket::COMPANY->value,
-        //         ImageDirectory::BRAND->value,
-        //         $brand->logo
-        //     );
-        // }
-
         $this->brandrepository->deleteById($id);
     }
 

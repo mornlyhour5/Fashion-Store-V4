@@ -6,11 +6,9 @@ use App\Enums\Status;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-// use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Brand extends Model
 {
-    //SoftDeletes
     use HasFactory;
 
     protected $table = 'brand';
@@ -41,8 +39,6 @@ class Brand extends Model
             return null;
         }
 
-        // Build the public URL to match where HelperMedia saves the file:
-        // public/uploads/images/{bucket}/{dirName}/{filename}
         return asset('uploads/images/' . \App\Enums\ImageBuket::COMPANY->value . '/' . \App\Enums\ImageDirectory::BRAND->value . '/' . $this->logo);
     }
 }
