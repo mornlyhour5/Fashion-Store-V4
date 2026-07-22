@@ -33,35 +33,17 @@ class CategoryServiceImpl implements CategoryServices
             'parent_id'  => 'nullable|exists:categories,id',
             'status'     => 'nullable|boolean',
             'sort_order' => 'nullable|integer',
-            // 'image'      => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'image'      => 'nullable',
         ];
         return $this->validator->validate($data, $rules);
     }
+    // success fully code
 
     public function getAllCategory()
     {
         return $this->categoryrepository->getAll();
     }
 
-    // public function create(Request $request): Model
-    // {
-    //     $validated = $this->categoryValidator($request->all());
-
-    //     $imageFile = $request->file('image');
-    //     if ($imageFile) {
-    //         $result = HelperMedia::saveImageFileOrBase64(
-    //             $imageFile,
-    //             'image',
-    //             ImageBuket::COMPANY->value,
-    //             ImageDirectory::CATEGORIES->value
-    //         )->filename;
-
-    //         $validated['image'] = $result->filename ?? null;
-    //     }
-
-    //     return $this->categoryrepository->create($validated);
-    // }
     public function create(Request $request): Model
     {
         $validated = $this->categoryValidator($request->all());
@@ -79,7 +61,7 @@ class CategoryServiceImpl implements CategoryServices
 
         return $this->categoryrepository->create($validated);
     }
-
+   
     public function getCategoryById(int $id): mixed
     {
         $category = $this->categoryrepository->findById($id, select: [
