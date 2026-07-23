@@ -15,18 +15,17 @@ class WishlistServiceImpl implements WishlistService
     public function getWistList(Request $request)
     {
         $userId = Auth::guard('api')->id();
-
         if (!$userId) {
             throw new UnauthExcept();
         }
 
-        return $this->wishlistRepository->pagination_wish(
-            fileters: $request->all(),
+        return $this->wishlistRepository->pagination(
+            fileters: $request->except('user_id'),
+            conditions: ['user_id' => $userId, 'deleted_at' => null],
             limit: (int) $request->input('per_page', 20),
             rawSort: $request->input('sort', '-created_at'),
             with: ['user', 'items', 'items.product'],
         );
-        // return $this->wishlistRepository->getAll();
     }
 
     public function create(Request $request)

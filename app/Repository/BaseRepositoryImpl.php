@@ -315,34 +315,34 @@ abstract class BaseRepositoryImpl implements BaseRepository
 
 
     public function pagination_wish(
-    array $fileters,
-    array $select = ['*'],
-    ?array $conditions = [],
-    int $limit = 100,
-    bool $withTotal = true,
-    string $rawSort = '',
-    ?callable $callbackFunc = null,
-    array $additionalResult = [],
-    ?int $cacheMin = 10,
-    array $catchTage = [],
-    ?array $with = [],
-    ?callable $beforeQuery = null
-): PaginationDTO {
-    return $this->pagination(
-        fileters: $fileters,
-        select: $select,
-        conditions: $conditions,
-        limit: $limit,
-        withTotal: $withTotal,
-        rawSort: $rawSort,
-        callbackFunc: $callbackFunc,
-        additionalResult: $additionalResult,
-        cacheMin: $cacheMin,
-        catchTage: $catchTage,
-        with: $with,
-        beforeQuery: $beforeQuery
-    );
-}
+        array $fileters,
+        array $select = ['*'],
+        ?array $conditions = [],
+        int $limit = 100,
+        bool $withTotal = true,
+        string $rawSort = '',
+        ?callable $callbackFunc = null,
+        array $additionalResult = [],
+        ?int $cacheMin = 10,
+        array $catchTage = [],
+        ?array $with = [],
+        ?callable $beforeQuery = null
+    ): PaginationDTO {
+        return $this->pagination(
+            fileters: $fileters,
+            select: $select,
+            conditions: $conditions,
+            limit: $limit,
+            withTotal: $withTotal,
+            rawSort: $rawSort,
+            callbackFunc: $callbackFunc,
+            additionalResult: $additionalResult,
+            cacheMin: $cacheMin,
+            catchTage: $catchTage,
+            with: $with,
+            beforeQuery: $beforeQuery
+        );
+    }
 
     // public function updateupdateById(int $id, array $data, array $conditions = ['deleted_at' => null], $throwIfNotFound = 'Resource not found'): ?Model
     // {
