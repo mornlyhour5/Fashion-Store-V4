@@ -93,7 +93,7 @@ class HelperMedia
         }
 
         $videoExtensions = ['mp4', 'mov', 'webm', 'ogg'];
-        $imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+        $imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'avif'];
 
         foreach ($paths as $path) {
             if (file_exists($path)) {
@@ -314,6 +314,7 @@ class HelperMedia
                 'image/heic',
                 'image/heif',
                 'image/webp',
+                'image/avif',
                 'application/octet-stream'
             ],
             'video' => [

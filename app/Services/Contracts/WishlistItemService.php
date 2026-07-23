@@ -11,4 +11,6 @@ interface WishlistItemService
     public function getallitemAdmin(Request $request);
 
     public function create(Request $request);
+
+    public function delete(int $id);
 }

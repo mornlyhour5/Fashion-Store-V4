@@ -40,6 +40,7 @@ class ProductServicesImpl implements ProductServices
             'gender'       => 'nullable' ?? GenderProduct::UNISEX->value,
             'short_description' => 'nullable',
             'country_of_origin' => 'nullable',
+            'material'      => 'nullable',
             // 'stock'        => 'nullable|integer|min:0',
             'weight'       => 'nullable',
             'is_featured'  => 'nullable' ?? FeaturedStatus::NOT_FEATURED->value,

@@ -23,6 +23,7 @@ class Products extends Model
         'status',
         'gender',
         'short_description',
+        'material',
         'country_of_origin',
         'weight',
         'is_featured'

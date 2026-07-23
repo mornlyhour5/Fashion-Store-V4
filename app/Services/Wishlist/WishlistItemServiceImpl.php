@@ -50,4 +50,9 @@ class WishlistItemServiceImpl implements WishlistItemService
             'product_id'  => $request->product_id,
         ]);
     }
+
+    public function delete(int $id)
+    {
+        return $this->wishlistItem->deleteById($id);
+    }
 }
