@@ -4,8 +4,11 @@ namespace App\Http\Controllers\Customer;
 
 use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
+// use App\Http\Requests\UpdateCustomerStatusRequest;
+use App\Http\Resources\UserResource;
 use App\Services\Contracts\CustomerService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CustomerController extends Controller
 {
@@ -36,7 +39,21 @@ class CustomerController extends Controller
         );
     }
 
-    public function getstaff(Request $request)
+    public function customerProfile(int $id)
+    {
+        $customer = $this->customerService->customerProfile($id);
+
+        return ApiResponse::success($customer);
+    }
+
+    public function getuserbyId(int $id)
+    {
+        $customer = $this->customerService->getUserById($id);
+
+        return ApiResponse::success($customer);
+    }
+
+    public function getstaff(Request $request) // request data staff
     {
         return ApiResponse::success(
             $this->customerService->getAllStaff([
@@ -46,85 +63,41 @@ class CustomerController extends Controller
         );
     }
 
-    // public function show($id)
-    // {
-    //     return ApiResponse::success($this->customerService->getWhereId($id));
-    // }
+    public function updateStatusUser(Request $request, int $id)
+    {
+        $customer = $this->customerService->updatecustomerStatus(
+            $request->only(['status', 'reason']),
+            $id
+        );
 
-    // public function store(Request $request)
-    // {
-    //     return ApiResponse::success($this->customerService->register($request->all()));
-    // }
+        return response()->json([
+            'message' => 'Account status updated.',
+            'data' => new UserResource($customer),
+        ]);
+    }
 
-    // public function update(Request $request, $id)
-    // {
-    //     try{
-    //         $request->validate([
-    //             'user_id'             => 'required|exists:users,id',
-    //             'full_name'           => 'required|string|max:255',
-    //             'phone'               => 'nullable|string|max:20',
-    //             'gender'              => 'nullable',
-    //             'date_of_birth'       => 'nullable|date',
-    //             'preferred_language'  => 'nullable|string|max:10',
-    //             'note'                => 'nullable|string',
-    //         ]);
+    public function updateProfile(Request $request)
+    {
+        $userId = Auth::guard('api')->id();
 
-    //         $customers = $this->customerService->update($request->all(), $id);
+        $profile = $this->customerService->updateProfile(
+            $userId,
+            $request->only(['first_name', 'last_name', 'phone', 'gender', 'date_of_birth', 'preferred_language'])
+        );
 
-    //         return response()->json([
-    //             'message' => 'Customer update successfully',
-    //             'data' => $customers
-    //         ]);
-    //     }catch (\Exception $e){
-    //         return response()->json([
-    //             'message' => 'Something went wrong',
-    //             'error' => $e->getMessage()
-    //         ]);
-    //     }
-    // }
+        return ApiResponse::success($profile, 'Profile updated.');
+    }
 
-//     public function update(Request $request, $id)
-// {
-//     try {
-//         $customer = \App\Models\Customers::findOrFail($id);
+    public function updateAvatar(Request $request)
+    {
+        $request->validate(['avatar' => 'required']);
 
-//         // ✅ Only allow user to update their own profile
-//         if ($customer->user_id !== $request->user()->id) {
-//             return response()->json(['message' => 'Unauthorized'], 403);
-//         }
+        $userId = Auth::guard('api')->id();
 
-//         $validated = $request->validate([
-//             'first_name'    => 'nullable|string|max:255',
-//             'last_name'     => 'nullable|string|max:255',
-//             'phone'         => 'nullable|string|max:20',
-//             'gender'        => 'nullable|in:1,2,3',
-//             'date_of_birth' => 'nullable|date',
-//             'note'          => 'nullable|string',
-//         ]);
+        $profile = $this->customerService->updateAvatar($userId, $request->file('avatar'));
 
-//         $customer->update($validated);
+        return ApiResponse::success($profile, 'Avatar updated.');
+    }
 
-//         return response()->json([
-//             'message'  => 'Profile updated successfully',
-//             'customer' => $customer
-//         ]);
 
-//     } catch (\Illuminate\Validation\ValidationException $e) {
-//         return response()->json([
-//             'message' => 'Validation failed',
-//             'errors'  => $e->errors()
-//         ], 422);
-
-//     } catch (\Exception $e) {
-//         return response()->json([
-//             'message' => 'Something went wrong',
-//             'error'   => $e->getMessage()
-//         ], 500);
-//     }
-// }
-
-//     public function delete($id)
-//     {
-//         return ApiResponse::success($this->customerService->delete($id));
-//     }
 }

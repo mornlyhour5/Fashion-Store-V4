@@ -20,6 +20,8 @@ interface BaseRepository
 
     public function getStaff(array $filters = []);
 
+    public function findByIduser(int $id, array $with = []);
+
     public function setActingUser(?AuthUser $user): static;
 
     public function lastId();
@@ -43,6 +45,8 @@ interface BaseRepository
     public function clearMainForVariant(int $variantId);
 
     public function getByVariant(int $id);
+
+    public function updateProfileByUserId(int $userId, array $data);
 
     // public function softDeleteById(int $id, ?string $reason = '', ?callable $callback = null): ?bool;
 

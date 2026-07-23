@@ -145,13 +145,43 @@ Route::post('/register', [RegisterController::class, 'register']);
 
 
 Route::middleware('auth:api')->group(function () {
+
+//this block route users
     Route::post('/logout',       [LoginController::class, 'logout']);
     Route::get('/me',            [CustomerController::class, 'me']);
+
+
+
+//customerProfile
+
+//  admin route manages
     Route::get('/notifications', [NotificationController::class, 'index']);
     Route::get('/getforuser',    [OrderController::class, 'getforuser']);
     Route::get('/wishlists',         [WishlistController::class, 'index']);
-});
 
+    Route::get('/coupons',             [CouponController::class, 'index']);
+    Route::post('/coupons',            [CouponController::class, 'create']);
+    Route::get('/coupons/{id}',        [CouponController::class, 'show']);
+    Route::put('/coupons/{id}',        [CouponController::class, 'update']);
+    Route::delete('/coupons/{id}',     [CouponController::class, 'delete']);
+
+    Route::get('/coupon-usages',       [CouponUsageController::class,  'index']);
+    Route::post('/coupon-usages',            [CouponUsageController::class, 'create']);
+    Route::get('/coupon-usages/{id}',        [CouponUsageController::class, 'show']);
+    Route::put('/coupon-usages/{id}',        [CouponUsageController::class, 'update']);
+    Route::delete('/coupon-usages/{id}',     [CouponUsageController::class, 'delete']);
+
+
+
+    //customer
+    Route::get('/users',                   [CustomerController::class, 'getuser']);
+    Route::get('/users/{id}',              [CustomerController::class, 'getuserbyId']);
+    Route::get('/staff',                   [CustomerController::class, 'getstaff']);
+    Route::patch('/customers/{id}/status', [CustomerController::class, 'updateStatusUser']);
+    Route::get('/customerProfile/{id}',    [CustomerController::class, 'customerProfile']);
+    Route::put('/customer/profile',        [CustomerController::class, 'updateProfile']);
+    Route::post('/customer/avatar',        [CustomerController::class, 'updateAvatar']);
+});
 /*
 |--------------------------------------------------------------------------
 | Protected Routes
@@ -171,8 +201,7 @@ Route::middleware('auth:api')->group(function () {
 //     });
 
 //     // customer
-    Route::get('/users',             [CustomerController::class, 'getuser']);
-    Route::get('/staff',             [CustomerController::class, 'getstaff']);
+
     Route::get('/customers',         [CustomerController::class, 'index']);
     Route::post('/customers',        [CustomerController::class, 'store']);
     Route::get('/customers/{id}',    [CustomerController::class, 'show']);
@@ -271,14 +300,6 @@ Route::prefix('carts')->group(function () {
     Route::delete('/{id}', [BrandController::class, 'delete']);
 });
 
-Route::get('/coupons',             [CouponController::class, 'index']);
-Route::post('/coupons',            [CouponController::class, 'create']);
-Route::get('/coupons/{id}',        [CouponController::class, 'show']);
-Route::put('/coupons/{id}',        [CouponController::class, 'update']);
-Route::delete('/coupons/{id}',     [CouponController::class, 'delete']);
 
-Route::get('/coupon-usages',       [CouponUsageController::class,  'index']);
-Route::post('/coupon-usages',            [CouponUsageController::class, 'create']);
-Route::get('/coupon-usages/{id}',        [CouponUsageController::class, 'show']);
-Route::put('/coupon-usages/{id}',        [CouponUsageController::class, 'update']);
-Route::delete('/coupon-usages/{id}',     [CouponUsageController::class, 'delete']);
+
+

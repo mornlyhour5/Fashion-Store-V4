@@ -91,61 +91,44 @@ class LoginController extends Controller
 {
     public function __construct(protected AuthService $loginservices) {}
 
-
-    // public function login(Request $request): JsonResponse
-    // {
-    //     $credentials = $request->only([
-    //         'email',
-    //         'password',
-    //     ]);
-
-    //     $auth = $this->loginservices->login($credentials);
-
-    //     return ApiResponse::success($auth, 'Login successful');
-    // }
-    // public function login(Request $request)
-    // {
-    //     $credentials = $request->only([
-    //         'email',
-    //         'password'
-    //     ]);
-
-    //     $auth = $this->loginservices->login($credentials);
-    //     return ApiResponse::success($auth, __('messages.login_success'));
-    // }
-
-    // public function logout(Request $request)
-    // {
-    //     Auth::guard('web')->logout();
-    //     $request->session()->invalidate();
-    //     $request->session()->regenerateToken();
-
-    //     return response()->json([
-    //         'message' => 'Logged out successfully'
-    //     ]);
-    // }
-
-public function login(Request $request)
-{
-    try {
+    public function login(Request $request)
+    {
         $result = $this->loginservices->login($request->only(['email', 'password']));
 
         if ($request->filled('loginAs')) {
-            $expectedRole = $request->input('loginAs') === 'admin' ? \App\Enums\Role::ADMIN : \App\Enums\Role::STAFF;
+            $expectedRole = $request->input('loginAs') === 'admin'
+                ? \App\Enums\Role::ADMIN
+                : \App\Enums\Role::STAFF;
+
             if ($result['user']->role !== $expectedRole) {
-                throw ValidationException::withMessages(['email' => ['This account does not have dashboard access.']]);
+                throw ValidationException::withMessages([
+                    'email' => ['This account does not have dashboard access.'],
+                ]);
             }
         }
 
         return ApiResponse::success($result, 'Login successful');
-    } catch (\Throwable $e) {
-        return response()->json([
-            'message' => $e->getMessage(),
-            'file' => $e->getFile(),
-            'line' => $e->getLine(),
-        ], 500);
     }
-}
+    // {
+    //     try {
+    //         $result = $this->loginservices->login($request->only(['email', 'password']));
+
+    //         if ($request->filled('loginAs')) {
+    //             $expectedRole = $request->input('loginAs') === 'admin' ? \App\Enums\Role::ADMIN : \App\Enums\Role::STAFF;
+    //             if ($result['user']->role !== $expectedRole) {
+    //                 throw ValidationException::withMessages(['email' => ['This account does not have dashboard access.']]);
+    //             }
+    //         }
+
+    //         return ApiResponse::success($result, 'Login successful');
+    //     } catch (\Throwable $e) {
+    //         return response()->json([
+    //             'message' => $e->getMessage(),
+    //             'file' => $e->getFile(),
+    //             'line' => $e->getLine(),
+    //         ], 500);
+    //     }
+    // }
 
     public function logout(Request $request)
     {

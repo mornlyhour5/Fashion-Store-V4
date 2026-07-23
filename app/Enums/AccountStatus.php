@@ -4,11 +4,30 @@ namespace App\Enums;
 
 enum AccountStatus: int
 {
-    case REGISTERED = 1;   // user has signed up but not yet verified
-    case PENDING = 2;      // verification/email not confirmed
-    case ACTIVE = 3;       // fully active account
-    case SUSPENDED = 4;    // temporarily disabled
-    case DEACTIVATED = 5;  // user voluntarily deactivated
-    case BANNED = 6;       // permanently banned
-    case LOCKED = 7;       // lock account
+    case REGISTERED = 1;
+    case PENDING = 2;
+    case ACTIVE = 3;
+    case SUSPENDED = 4;
+    case DEACTIVATED = 5;
+    case BANNED = 6;
+    case LOCKED = 7;
+
+    public function label(): string
+    {
+        return match ($this) {
+            self::REGISTERED => 'Registered',
+            self::PENDING => 'Pending Verification',
+            self::ACTIVE => 'Active',
+            self::SUSPENDED => 'Suspended',
+            self::DEACTIVATED => 'Deactivated',
+            self::BANNED => 'Banned',
+            self::LOCKED => 'Locked',
+        };
+    }
+
+    /** Statuses an admin is allowed to set manually */
+    public static function adminAssignable(): array
+    {
+        return [self::ACTIVE, self::SUSPENDED, self::BANNED, self::LOCKED];
+    }
 }

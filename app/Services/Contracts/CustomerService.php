@@ -2,11 +2,27 @@
 
 namespace App\Services\Contracts;
 
+use Illuminate\Http\UploadedFile;
+
+// use Illuminate\Http\Request;
+
 interface CustomerService
 {
     public function getAllcustomer();
 
+    public function customerProfile(int $id);
+
+    public function userProfile(int $id);
+
+    public function updateProfile(int $id, array $data);
+
+    public function updateAvatar(int $id, UploadedFile $avatarFile);
+
     public function getAllUser(array $filters = []); // get user role customer only
 
     public function getAllStaff(array $filters = []); // get data from user table where role staff
+
+    public function updatecustomerStatus(array $data, int $id);
+
+   public function getUserById(int $id);
 }

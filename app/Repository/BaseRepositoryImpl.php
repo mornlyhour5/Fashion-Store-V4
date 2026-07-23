@@ -53,6 +53,14 @@ abstract class BaseRepositoryImpl implements BaseRepository
     //     return $query->first();
     // }
 
+    public function updateProfileByUserId(int $userId, array $data)
+    {
+        return \App\Models\Customers::updateOrCreate(
+            ['user_id' => $userId],
+            $data
+        );
+    }
+
     public function getAll(): Collection
     {
         return $this->model->whereNull('deleted_at')->get();
@@ -80,6 +88,11 @@ abstract class BaseRepositoryImpl implements BaseRepository
     public function findById(int $id, array $select = ['*']): ?Model
     {
         return $this->model->select($select)->find($id);
+    }
+
+    public function findByIduser(int $id, array $with = [])
+    {
+        return $this->model->with($with)->find($id);
     }
 
     public function findByIdWithConditions(int $id, array $select = ['*'], array $conditions = []): ?Model

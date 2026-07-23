@@ -45,8 +45,24 @@ class AuthServiceImpl implements AuthService
             ]);
         }
 
+        $user = Auth::guard('api')->user();
+
+        $blockedMessages = [
+            \App\Enums\AccountStatus::SUSPENDED->value => 'Your account has been suspended. Contact support for assistance.',
+            \App\Enums\AccountStatus::BANNED->value => 'Your account has been banned.',
+            \App\Enums\AccountStatus::LOCKED->value => 'Your account is locked. Contact support to regain access.',
+            \App\Enums\AccountStatus::DEACTIVATED->value => 'Your account has been deactivated. Contact support to reactivate.',
+        ];
+
+        if ($user->status && isset($blockedMessages[$user->status->value])) {
+            Auth::guard('api')->logout();
+            throw ValidationException::withMessages([
+                'email' => [$blockedMessages[$user->status->value]],
+            ]);
+        }
+
         return [
-            'user' => Auth::guard('api')->user(),
+            'user' => $user,
             'token' => $token,
         ];
     }

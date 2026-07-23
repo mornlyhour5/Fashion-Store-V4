@@ -13,4 +13,5 @@ enum ImageDirectory:string
     case PAYMENT = 'payment';
     case PRODUCT_MODEL = 'product_model';
     case SERVICE = 'service';
+    case AVATAR = 'avata';
 }

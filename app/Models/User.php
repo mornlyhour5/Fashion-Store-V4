@@ -6,8 +6,8 @@ namespace App\Models;
 
 // use App\Http\Controllers\Auth\ResetPasswordNotificationController;
 
+use App\Enums\AccountStatus;
 use App\Enums\Role;
-use App\Enums\Status;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -33,7 +33,7 @@ class User extends Authenticatable implements JWTSubject
         'last_login_at',
         'avata',
         'date_of_birth',
-        'active'
+        'status'
     ];
 
     /**
@@ -56,7 +56,7 @@ class User extends Authenticatable implements JWTSubject
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
-            'status' => Status::class,
+            'status' => AccountStatus::class,
             'role' => Role::class,
         ];
     }
