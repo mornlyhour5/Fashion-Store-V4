@@ -14,6 +14,7 @@ use App\Services\Contracts\ProductVariantServices;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ProductVariantServicesImpl implements ProductVariantServices
 {
@@ -27,19 +28,19 @@ class ProductVariantServicesImpl implements ProductVariantServices
     {
         $rules = [
             'product_id'            => 'required|exists:products,id',
-            'sku'                   => 'required|string|max:150',
-            'color'                 => 'required|string|max:50',
-            'size'                  => 'required|string|max:20',
-            'unit_price'            => 'required|numeric|min:0',
-            'quantity'              => 'required|numeric|min:0',
-            'low_stock_threshold'   => 'required|integer|min:0',
-            'barcode'               => 'nullable|string|max:255',
-            'cost_price'            => 'nullable|numeric|min:0',
-            'status'                => 'nullable|integer',
-            'weight'                => 'nullable|numeric|min:0',
+            'sku'                   => 'required',
+            'color'                 => 'required',
+            'size'                  => 'required',
+            'unit_price'            => 'required',
+            'low_stock_threshold'   => 'required',
+            'quantity'              => 'required',
+            'barcode'               => 'nullable',
+            'cost_price'            => 'nullable',
+            'status'                => 'nullable',
+            'weight'                => 'nullable',
 
-            'images'                => 'nullable|array',
-            'images.*'              => 'nullable|image|max:5120',
+            'image'    => 'nullable|array',
+            'image.*'  => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
         ];
         return $this->validator->validate($data, $rules);
     }
@@ -73,7 +74,7 @@ class ProductVariantServicesImpl implements ProductVariantServices
         }
 
         return DB::transaction(function () use ($validated, $request) {
-            $variantData = collect($validated)->except('images')->toArray();
+            $variantData = collect($validated)->except('image')->toArray();
             $variant = $this->productvariantrepository->create($variantData);
 
             $this->storeImages($request, $variant->id);
@@ -101,7 +102,7 @@ class ProductVariantServicesImpl implements ProductVariantServices
         }
 
         return DB::transaction(function () use ($validated, $request, $id) {
-            $variantData = collect($validated)->except('images')->toArray();
+            $variantData = collect($validated)->except('image')->toArray();
             $this->productvariantrepository->updateById($id, $variantData);
 
             $this->storeImages($request, $id);
@@ -110,7 +111,7 @@ class ProductVariantServicesImpl implements ProductVariantServices
         });
     }
 
-    public function delete(int $id): void
+    public function delete(int $id)
     {
         $variant = $this->productvariantrepository->findById($id);
 
@@ -133,19 +134,42 @@ class ProductVariantServicesImpl implements ProductVariantServices
 
     private function storeImages(Request $request, int $variantId): void
     {
-        if (!$request->hasFile('images')) {
+        if (!$request->hasFile('image')) {
             return;
         }
 
-        $files = $request->file('images');
+        $files = $request->file('image');
         $existingCount = $this->productImageRepository->countByVariant($variantId);
 
         foreach ($files as $index => $file) {
-            $storedName = HelperMedia::saveImageFileOrBase64(
-                $file,
-                \App\Enums\ImageBuket::COMPANY->value,
-                \App\Enums\ImageDirectory::VARIANT->value
-            );
+            if (!$file->isValid()) {
+                continue;
+            }
+
+            try {
+                $result = HelperMedia::saveImageFileOrBase64(
+                    $file,
+                    ImageBuket::COMPANY->value,
+                    ImageDirectory::VARIANT->value
+                );
+            } catch (\Throwable $e) {
+                Log::error('Variant image save failed', [
+                    'variant_id' => $variantId,
+                    'file' => $file->getClientOriginalName(),
+                    'error' => $e->getMessage(),
+                ]);
+                continue;
+            }
+
+            $storedName = $result->filename ?? null;
+
+            if (!$storedName) {
+                Log::error('Failed to resolve stored filename for variant image', [
+                    'variant_id' => $variantId,
+                    'file' => $file->getClientOriginalName(),
+                ]);
+                continue;
+            }
 
             $this->productImageRepository->create([
                 'product_variant_id' => $variantId,

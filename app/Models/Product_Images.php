@@ -10,10 +10,10 @@ class Product_Images extends Model
     protected $appends = ['image_url'];
 
     protected $fillable = [
-        'image',
         'is_main',
         'sort_order',
-        'product_variant_id'
+        'product_variant_id',
+        'image',
     ];
 
     public function productVariant()

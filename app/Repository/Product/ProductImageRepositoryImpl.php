@@ -10,6 +10,6 @@ class ProductImageRepositoryImpl extends BaseRepositoryImpl implements ProductIm
 {
     public function __construct(Product_Images $productImages)
     {
-        $this->model = $productImages;
+        parent::__construct($productImages);
     }
 }

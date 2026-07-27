@@ -16,6 +16,10 @@ class Product_Variants extends Model
         'unit_price',
         'quantity',
         'low_stock_threshold',
+        'barcode',
+        'cost_price',
+        'status',
+        'weight'
     ];
 
     public function product()

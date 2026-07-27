@@ -272,15 +272,19 @@ class HelperMedia
         $results = [];
 
         foreach ($files as $file) {
-            if ($file instanceof UploadedFile) {
+            if (!$file instanceof UploadedFile || !$file->isValid()) {
+                $results[] = (object)['filename' => null, 'ext' => null, 'path' => null, 'mime' => null];
+                continue;
+            }
+
+            try {
                 $results[] = self::saveUploadedFile($file, $type, $bucket, $dirName, $subDir);
-            } else {
-                $results[] = (object)[
-                    'filename' => null,
-                    'ext'      => null,
-                    'path'     => null,
-                    'mime'     => null
-                ];
+            } catch (\Throwable $e) {
+                Log::error('saveUploadedFile failed', [
+                    'file'  => $file->getClientOriginalName(),
+                    'error' => $e->getMessage(),
+                ]);
+                $results[] = (object)['filename' => null, 'ext' => null, 'path' => null, 'mime' => null];
             }
         }
         return $results;

@@ -170,6 +170,9 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/coupon-usages/{id}',        [CouponUsageController::class, 'show']);
     Route::put('/coupon-usages/{id}',        [CouponUsageController::class, 'update']);
     Route::delete('/coupon-usages/{id}',     [CouponUsageController::class, 'delete']);
+    
+    Route::delete('/Product-variant/{variantId}/image/{imageId}', [ProductVariantController::class, 'deleteImage']);
+    Route::patch('/Product-variant/{variantId}/image/{imageId}/main', [ProductVariantController::class, 'setMainImage']);
 
 
 
@@ -181,6 +184,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/customerProfile/{id}',    [CustomerController::class, 'customerProfile']);
     Route::put('/customer/profile',        [CustomerController::class, 'updateProfile']);
     Route::post('/customer/avatar',        [CustomerController::class, 'updateAvatar']);
+
 });
 /*
 |--------------------------------------------------------------------------

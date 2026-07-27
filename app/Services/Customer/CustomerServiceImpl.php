@@ -28,7 +28,7 @@ class CustomerServiceImpl implements CustomerService
     private function userValidator(array $data): array
     {
         $rules = [
-            'avata'  => 'required',
+            'avata'  => 'nullable',
             'status' => ['required', new Enum(AccountStatus::class)],
             'reason' => ['nullable', 'string', 'max:500'],
         ];

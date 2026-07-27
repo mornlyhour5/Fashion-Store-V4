@@ -11,15 +11,9 @@ class ProductVariantController extends Controller
 {
     public function __construct(protected ProductVariantServices $productVariantServices){}
 
-    public function index(Request $request)
+    public function index()
     {
-        // if ($request->has('product_id')) {
-        //     // Filter by product_id so frontend gets only this product's variants
-        //     $variants = $this->productVariantServices->getAllVariant()
-        //         ->where('product_id', $request->product_id)
-        //         ->values();
-        //     return ApiResponse::success($variants);
-        // }
+
         return ApiResponse::success($this->productVariantServices->getAllVariant());
     }
 
@@ -39,16 +33,6 @@ class ProductVariantController extends Controller
 
     public function update(Request $request,int $id)
     {
-            // $validate = $request->validate([
-            //     'product_id'            => 'required|exists:products,id',
-            //     'sku'                   => 'required|string|max:150',
-            //     'color'                 => 'required|string|max:50',
-            //     'size'                  => 'required|string|max:20',
-            //     'price'                 => 'required|numeric|min:0',
-            //     'stock'                 => 'required|integer|min:0',
-            //     'low_stock_threshold'   => 'required|integer|min:0',
-            //     'image'                 => 'nullable|string|max:1000',
-            // ]);
         $variant = $this->productVariantServices->update($request, $id);
 
         return ApiResponse::success($variant);
@@ -60,4 +44,24 @@ class ProductVariantController extends Controller
 
         return ApiResponse::success($variant);
     }
+
+    public function deleteImage(int $variantId, int $imageId)
+    {
+        $this->productVariantServices->deleteImage($variantId, $imageId);
+
+        return ApiResponse::success(null, 'Image removed.');
+    }
+
+    public function setMainImage(int $variantId, int $imageId)
+    {
+        $this->productVariantServices->setMainImage($variantId, $imageId);
+
+        return ApiResponse::success(null, 'Main image updated.');
+    }
 }
+
+
+
+
+// product variant erorr insert update and in product image doesn't work
+

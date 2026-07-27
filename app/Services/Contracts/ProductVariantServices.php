@@ -15,5 +15,9 @@ interface ProductVariantServices
 
     public function update(Request $request, int $id): mixed;
 
-    public function delete(int $id): void;
+    public function delete(int $id);
+
+    public function deleteImage(int $variantId, int $imageId): void;
+
+    public function setMainImage(int $variantId, int $imageId): void;
 }
