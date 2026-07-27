@@ -26,6 +26,7 @@ use App\Repository\Product\{
     ProductRepositoryImpl,
     ProductVariantRepositoryImpl,
     ProductImageRepositoryImpl,
+    ProductReviewsRepositoryImpl,
 };
 use App\Repository\Contracts\{
     AuthRepository,
@@ -42,6 +43,7 @@ use App\Repository\Contracts\{
     ProductRepository,
     ProductVariantRepository,
     ProductImageRepository,
+    ProductReviewsRepository,
     WishlistItemRepository,
     WishlistRepository,
 };
@@ -66,6 +68,7 @@ return [
     ProductRepository::class => ProductRepositoryImpl::class,
     ProductVariantRepository::class => ProductVariantRepositoryImpl::class,
     ProductImageRepository::class => ProductImageRepositoryImpl::class,
+    ProductReviewsRepository::class => ProductReviewsRepositoryImpl::class,
     WishlistRepository::class => WishlistRepositoryImpl::class,
     WishlistItemRepository::class => WishlistItemRepositoryImpl::class,
 ];

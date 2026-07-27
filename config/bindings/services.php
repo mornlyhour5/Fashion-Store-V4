@@ -26,6 +26,7 @@ use App\Services\Product\{
     ProductServicesImpl,
     ProductVariantServicesImpl,
     ProductImageServicesImpl,
+    ProductReviewsServicesImpl
 };
 
 use App\Services\Contracts\{
@@ -42,6 +43,7 @@ use App\Services\Contracts\{
     ProductServices,
     ProductVariantServices,
     ProductImageServices,
+    ProductReviewsService,
     AuthService,
     WishlistService,
     WishlistItemService
@@ -68,6 +70,7 @@ return [
     ProductServices::class => ProductServicesImpl::class,
     ProductVariantServices::class => ProductVariantServicesImpl::class,
     ProductImageServices::class => ProductImageServicesImpl::class,
+    ProductReviewsService::class => ProductReviewsServicesImpl::class,
     WishlistService::class => WishlistServiceImpl::class,
     WishlistItemService::class => WishlistItemServiceImpl::class,
 ];

@@ -14,6 +14,7 @@ use App\Http\Controllers\Product\BrandController;
 use App\Http\Controllers\Product\CategoryController;
 use App\Http\Controllers\Product\ProductController;
 use App\Http\Controllers\Product\ProductImageController;
+use App\Http\Controllers\Product\ProductReviewController;
 use App\Http\Controllers\Product\ProductVariantController;
 use App\Http\Controllers\Wishlist\WishlistController;
 use App\Http\Controllers\Wishlist\WishlistItemController;
@@ -170,10 +171,13 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/coupon-usages/{id}',        [CouponUsageController::class, 'show']);
     Route::put('/coupon-usages/{id}',        [CouponUsageController::class, 'update']);
     Route::delete('/coupon-usages/{id}',     [CouponUsageController::class, 'delete']);
-    
+
+    //Product
     Route::delete('/Product-variant/{variantId}/image/{imageId}', [ProductVariantController::class, 'deleteImage']);
     Route::patch('/Product-variant/{variantId}/image/{imageId}/main', [ProductVariantController::class, 'setMainImage']);
 
+    Route::get('/Review',           [ProductReviewController::class, 'index']);
+    Route::delete('/Review/{id}',   [ProductReviewController::class, 'delete']);
 
 
     //customer
