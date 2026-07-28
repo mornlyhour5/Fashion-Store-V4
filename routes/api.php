@@ -94,9 +94,24 @@ Route::middleware('auth:api')->group(function () {
     // this route for order items
     Route::put('/Order-item/{id}',    [OrderItemController::class, 'update']);
 
-});
-    Route::get('/customersDetail',         [CustomerController::class, 'getDetail']);
+    //block code admin manage customer
+    Route::get('/customer-profiles/{id}', [CustomerController::class, 'getDetail']);
+    Route::get('/getAddressCustomer/{id}', [AddressController::class, 'getAddressUserforAdmin']);
+    Route::get('/getOrderCustomer/{id}', [OrderController::class, 'getOrderUserforAdmin']);
 
+    //admin manages address
+    Route::prefix('AddressAdmin')->group(function () {
+        Route::get('/', [AddressController::class, 'getAddressAdmin']);
+        Route::post('/', [AddressController::class, 'store']);
+        Route::get('/{id}', [AddressController::class, 'show']);
+        Route::put('/{id}', [AddressController::class, 'update']);
+        Route::delete('/{id}', [AddressController::class, 'delete']);
+    });
+
+});
+
+
+    Route::get('/customer-profiles/{id}', [CustomerController::class, 'getDetail']);
 
     Route::get('/customers',         [CustomerController::class, 'index']);
     Route::post('/customers',        [CustomerController::class, 'store']);
@@ -106,7 +121,6 @@ Route::middleware('auth:api')->group(function () {
 
 
     Route::get('/addresses',         [AddressController::class, 'index']);
-    Route::get('/getAddressAdmin',         [AddressController::class, 'getAddressAdmin']);
     Route::get('/addresses/{id}',    [AddressController::class, 'show']);
     Route::post('/addresses',        [AddressController::class, 'store']);
     Route::put('/addresses/{id}',    [AddressController::class, 'update']);

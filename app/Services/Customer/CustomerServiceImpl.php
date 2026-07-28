@@ -8,6 +8,7 @@ use App\Enums\ImageDirectory;
 use App\Exceptions\NotFoundExcept;
 use App\Helpers\CustomValidator;
 use App\Helpers\HelperMedia;
+use App\Repository\Contracts\CustomerProfileRepository;
 use App\Repository\Contracts\CustomerRepository;
 use App\Repository\Contracts\UserRepository;
 use App\Services\Contracts\CustomerService;
@@ -21,6 +22,7 @@ class CustomerServiceImpl implements CustomerService
 {
     public function __construct(
         protected CustomerRepository $customerRepository,
+        protected CustomerProfileRepository $customerProfileRepository,
         protected UserRepository $userRepository,
         protected CustomValidator $validator
     ) {}
@@ -81,7 +83,7 @@ class CustomerServiceImpl implements CustomerService
 
     public function customerProfileDetail(int $id)
     {
-        return $this->;
+        return $this->customerProfileRepository->findByUserId($id);
     }
 
     public function getAllStaff(array $filters = []) // get data from repisitory staff where role

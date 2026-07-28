@@ -82,6 +82,11 @@ class OrdersServicesImpl implements OrderService
         return $order;
     }
 
+    public function getOrderByUserId(int $id)
+    {
+        return $this->orderRepository->findByUserId($id);
+    }
+
     public function getOrderForuser(Request $request)
     {
         $userId = Auth::guard('api')->id();

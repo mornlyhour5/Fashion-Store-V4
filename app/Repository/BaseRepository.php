@@ -20,6 +20,8 @@ interface BaseRepository
 
     public function getStaff(array $filters = []);
 
+    public function findByUserId(int $userId);
+
     public function findByIduser(int $id, array $with = []);
 
     public function setActingUser(?AuthUser $user): static;

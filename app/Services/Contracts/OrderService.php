@@ -9,6 +9,7 @@ interface OrderService
 {
     public function getAllOrders();
 
+    public function getOrderByUserId(int $id);
 
     public function getOrderForuser(Request $request);
 

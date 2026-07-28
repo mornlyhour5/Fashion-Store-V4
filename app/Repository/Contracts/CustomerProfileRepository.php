@@ -2,13 +2,9 @@
 
 namespace App\Repository\Contracts;
 
-class CustomerProfileRepository
+use App\Repository\BaseRepository;
+
+interface CustomerProfileRepository extends BaseRepository
 {
-    /**
-     * Create a new class instance.
-     */
-    public function __construct()
-    {
-        //
-    }
+
 }

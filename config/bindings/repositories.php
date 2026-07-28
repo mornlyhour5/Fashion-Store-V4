@@ -5,7 +5,8 @@ use App\Repository\Auth\AuthRepositoryImpl;
 use App\Repository\Customer\{
     AddressRepositoryImpl,
     CustomerRepositoryImpl,
-    UserRepositoryImpl
+    UserRepositoryImpl,
+    CustomerProfileRepositoryImpl,
 };
 
 use App\Repository\Notification\NotificationRepositoryImpl;
@@ -38,6 +39,7 @@ use App\Repository\Contracts\{
     UserRepository,
     CouponRepository,
     CouponUsageRepository,
+    CustomerProfileRepository,
     NotificationRepository,
     OrderRepository,
     OrderItemRepository,
@@ -61,6 +63,7 @@ return [
     BrandRepository::class => BrandRepositoryImpl::class,
     CategoryRepository::class => CategoryRepositoryImpl::class,
     CustomerRepository::class => CustomerRepositoryImpl::class,
+    CustomerProfileRepository::class => CustomerProfileRepositoryImpl::class,
     UserRepository::class => UserRepositoryImpl::class,
     NotificationRepository::class => NotificationRepositoryImpl::class,
     CouponRepository::class => CouponRepositoryImpl::class,

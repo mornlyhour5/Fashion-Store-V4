@@ -18,6 +18,13 @@ class OrderController extends Controller
         return ApiResponse::success($orders, 'Orders retrieved successfully');
     }
 
+    public function getOrderUserforAdmin(int $id)
+    {
+        $order = $this->orderServices->getOrderByUserId($id);
+
+        return ApiResponse::success($order, 'Orders retrieved successfully');
+    }
+
     public function show(int $id): JsonResponse
     {
         $order = $this->orderServices->getOrderById($id);

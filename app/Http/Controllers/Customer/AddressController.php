@@ -18,11 +18,6 @@ class AddressController extends Controller
         return ApiResponse::success($this->addressService->getAddress($request));
     }
 
-    public function getAddressAdmin(Request $request)
-    {
-        return ApiResponse::success($this->addressService->getAddressAdmin($request));
-    }
-
     public function show(Request $request, int $id)
     {
         return ApiResponse::success($this->addressService->getAddressById($request->all(), $id));
@@ -41,5 +36,18 @@ class AddressController extends Controller
     public function delete(int $id)
     {
         return ApiResponse::success($this->addressService->delete($id));
+    }
+
+    //this for admin only
+    public function getAddressAdmin(Request $request)
+    {
+        return ApiResponse::success($this->addressService->getAddressAdmin($request));
+    }
+
+    public function getAddressUserforAdmin(int $id) //this get for admin manages customer information
+    {
+        $address = $this->addressService->getAddressByUserId($id);
+
+        return ApiResponse::success($address, 'address retrived successfully');
     }
 }

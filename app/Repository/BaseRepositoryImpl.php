@@ -90,6 +90,11 @@ abstract class BaseRepositoryImpl implements BaseRepository
         return $query->latest()->paginate($filters['per_page'] ?? 15);
     }
 
+    public function findByUserId(int $userId)
+    {
+        return $this->model->where('user_id', $userId)->get();
+    }
+
     public function getByVariant(int $variantId): Collection
     {
         return $this->model->where('product_variant_id', $variantId)
@@ -310,7 +315,7 @@ abstract class BaseRepositoryImpl implements BaseRepository
             beforeQuery: $beforeQuery
         );
     }
-    
+
     public function findByEmailWithConditions(string $email, array $select = ['*'], array $conditions = []): ?Model
     {
         $query = $this->model->select($select)->where('email', $email);

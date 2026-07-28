@@ -22,7 +22,7 @@ class AddressServiceImpl implements AddressService
     private function AddressValidator(array $data)
     {
         $rules = [
-            'user_id' => 'required',
+            'user_id' => 'nullable',
             'label'   => 'nullable',
             'recipient_name' => 'nullable',
             'phone'   => 'nullable',
@@ -34,6 +34,11 @@ class AddressServiceImpl implements AddressService
             'is_default' => 'nullable'
         ];
         return $this->validator->validate($data, $rules);
+    }
+
+    public function getAddressByUserId(int $id)
+    {
+        return $this->addressRepository->findByUserId($id);
     }
 
     // #[Override]
@@ -73,7 +78,13 @@ class AddressServiceImpl implements AddressService
 
     public function create(Request $request): Model
     {
-        $validated = $this->AddressValidator($request->all());
+        $data = $request->all();
+
+        if (empty($data['user_id'])) {
+            $data['user_id'] = Auth::guard('api')->id();
+        }
+
+        $validated = $this->AddressValidator($data);
 
         return $this->addressRepository->create($validated);
     }
@@ -98,4 +109,10 @@ class AddressServiceImpl implements AddressService
 
         $this->addressRepository->deleteById($id);
     }
+
+
+
+    //this admin service
+
+
 }

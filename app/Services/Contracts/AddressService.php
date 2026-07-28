@@ -10,7 +10,7 @@ interface AddressService
 {
     public function getAddress(Request $request);
 
-    public function getAddressAdmin(Request $request);
+    public function getAddressByUserId(int $id);
 
     public function getAddressById(array $data, int $id): mixed;
 
@@ -19,4 +19,9 @@ interface AddressService
     public function update(Request $request, int $id): mixed;
 
     public function delete(int $id): void;
+
+
+    // this for admin
+
+    public function getAddressAdmin(Request $request);
 }

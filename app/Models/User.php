@@ -65,6 +65,11 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasOne(Customers::class, 'user_id');
     }
 
+    public function address()
+    {
+        return $this->hasMany(Addresses::class, 'user_id');
+    }
+
     public function sendPasswordResetNotification($token): void
     {
         $this->notify(new ResetPasswordNotification($token));

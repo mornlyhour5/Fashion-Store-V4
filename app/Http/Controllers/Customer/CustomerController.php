@@ -62,9 +62,11 @@ class CustomerController extends Controller
         );
     }
 
-    public function getDetail()
+    public function getDetail(int $id)
     {
+        $customer = $this->customerService->customerProfileDetail($id);
 
+        return ApiResponse::success($customer, 'Customer profile retrived successfully');
     }
 
     public function updateStatusUser(Request $request, int $id)
