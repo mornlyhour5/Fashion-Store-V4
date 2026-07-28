@@ -12,6 +12,8 @@ interface CustomerService
 
     public function customerProfile(int $id);
 
+    public function customerProfileDetail(int $id); //this route for admin
+
     public function userProfile(int $id);
 
     public function updateProfile(int $id, array $data);

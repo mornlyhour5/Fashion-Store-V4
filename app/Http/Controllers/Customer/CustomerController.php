@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Customer;
 
 use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
-// use App\Http\Requests\UpdateCustomerStatusRequest;
 use App\Http\Resources\UserResource;
 use App\Services\Contracts\CustomerService;
 use Illuminate\Http\Request;
@@ -61,6 +60,11 @@ class CustomerController extends Controller
                 'per_page' => $request->per_page ?? 15,
             ])
         );
+    }
+
+    public function getDetail()
+    {
+
     }
 
     public function updateStatusUser(Request $request, int $id)

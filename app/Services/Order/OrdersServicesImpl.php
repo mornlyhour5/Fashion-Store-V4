@@ -2,6 +2,7 @@
 
 namespace App\Services\Order;
 
+use App\Enums\OrderStatus;
 use App\Enums\PaymentMethod;
 use App\Enums\PaymentStatus;
 use App\Exceptions\BadRequestExcept;
@@ -10,6 +11,7 @@ use App\Helpers\CustomValidator;
 use App\Repository\Contracts\AddressRepository;
 use App\Repository\Contracts\CouponRepository;
 use App\Repository\Contracts\CustomerRepository;
+use App\Repository\Contracts\OrderHistoryRepository;
 use App\Repository\Contracts\OrderItemRepository;
 use App\Repository\Contracts\OrderRepository;
 use App\Repository\Contracts\ProductRepository;
@@ -25,6 +27,7 @@ class OrdersServicesImpl implements OrderService
     public function __construct(
         protected OrderRepository $orderRepository,
         protected OrderItemRepository $orderItemRepository,
+        protected OrderHistoryRepository $orderHistoryRepository,
         protected CustomValidator $validator,
 
         protected CustomerRepository $customerrepository,
@@ -62,6 +65,21 @@ class OrdersServicesImpl implements OrderService
 
         ];
         return $this->validator->validate($data, $rules);
+    }
+
+    public function getOrderById(int $id)
+    {
+        $order = $this->orderRepository->query()
+            ->with(['items.Product', 'items.Variant', 'customer', 'address'])
+            ->find($id);
+
+        if (!$order) {
+            throw new NotFoundExcept(__('messages.not_found', [
+                'info' => __('general.product.order')
+            ]));
+        }
+
+        return $order;
     }
 
     public function getOrderForuser(Request $request)
@@ -111,6 +129,8 @@ class OrdersServicesImpl implements OrderService
             ];
         })->toArray();
     }
+
+
 
     private function orderNumbergenerate()
     {
@@ -318,16 +338,6 @@ class OrdersServicesImpl implements OrderService
                 $row['order_id'] = $order->id;
             }
 
-            // $this->orderItemRepository->setActingUser($authUser)->bulkInsert($rows);
-
-            // $completed = $validated['']
-
-            // if ($completed) {
-            //     foreach ($rows as $row) {
-            //         $this->;
-            //     }
-            // }
-
             DB::commit();
             return true;
         } catch (\Exception $e) {
@@ -339,30 +349,57 @@ class OrdersServicesImpl implements OrderService
             throw new BadRequestExcept();
         }
     }
-    // public function updateOrderById(array $data, int $id): mixed
-    // {
-    //     $validated = $this->orderValidator($data);
 
-    //     $old = $this->orderRepository->query()
-    //     ->with(['items' => function ($q) {
-    //         $q->where('deleted_at', null);
-    //     }])
-    //     ->where('deleted_at', null)
-    //     ->find($id);
+    public function updateStatus(array $data, int $id)
+    {
+        $rules = [
+            'order_status' => 'required',
+        ];
+        $validated = $this->validator->validate($data, $rules);
 
-    //     if (!$old) {
-    //         throw new NotFoundExcept(__('messages.not_found', [
-    //             'info' => __('general.product.order')
-    //         ]));
-    //     }
+        $order = $this->orderRepository->findById($id);
 
-    //     $customer = $this->customerrepository->findById($validated['customer_id']);
-    //     if(!$customer) {
-    //         throw new NotFoundExcept(__('messages.not_found', [
-    //             'info' => __('general.product.order')
-    //         ]));
-    //     }
+        if (!$order) {
+            throw new NotFoundExcept(__('messages.not_found', [
+                'info' => 'general.order.status'
+            ]));
+        }
+
+        $newStatus = OrderStatus::from((int) $validated['order_status']);
+
+        if (!in_array($newStatus, OrderStatus::cases(), true)) {
+            throw new \InvalidArgumentException('That status cannot be set manually.');
+        }
+
+        $oldStatus = $order->order_status;
+        $adminId = Auth::guard('api')->id();
+
+        return DB::transaction(function () use ($id, $newStatus, $oldStatus, $adminId) {
+            $updated = $this->orderRepository->updateById($id, [
+                'order_status' => $newStatus->value
+            ]);
+
+            $this->orderHistoryRepository->create([
+                'order_id'    => $id,
+                'changed_by'  => $adminId,
+                'from_status' => $oldStatus,
+                'to_status'   => $newStatus->value,
+                'note'        => null,
+                'changed_at'  => now(),
+            ]);
+            return $updated;
+        });
+    }
 
 
-    // }
+    //this block code for order status history
+    public function getHistory(Request $request)
+    {
+        return $this->orderHistoryRepository->pagination(
+            fileters: $request->all(),
+            conditions: ['order_id' => $request->input('order_id')],
+            limit: (int) $request->input('per_page', 100),
+            rawSort: $request->input('sort', '-changed_at'),
+        );
+    }
 }

@@ -44,6 +44,11 @@ class Products extends Model
         return $this->hasMany(Product_Images::class, 'product_id');
     }
 
+    public function order_item()
+    {
+        return $this->hasMany(Order_Items::class, 'product_id');
+    }
+
     protected $casts = [
         'status' => ProductStatus::class,
         'gender' => GenderProduct::class, // 👈 added

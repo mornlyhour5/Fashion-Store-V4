@@ -12,7 +12,8 @@ use App\Repository\Notification\NotificationRepositoryImpl;
 
 use App\Repository\Order\{
     OrderRepositoryImpl,
-    OrderItemRepositoryImpl
+    OrderItemRepositoryImpl,
+    OrderHistoryRepositoryImpl
 };
 
 use App\Repository\Coupon\{
@@ -40,6 +41,7 @@ use App\Repository\Contracts\{
     NotificationRepository,
     OrderRepository,
     OrderItemRepository,
+    OrderHistoryRepository,
     ProductRepository,
     ProductVariantRepository,
     ProductImageRepository,
@@ -65,6 +67,7 @@ return [
     CouponUsageRepository::class => CouponUsageRepositoryImpl::class,
     OrderItemRepository::class => OrderItemRepositoryImpl::class,
     OrderRepository::class => OrderRepositoryImpl::class,
+    OrderHistoryRepository::class => OrderHistoryRepositoryImpl::class,
     ProductRepository::class => ProductRepositoryImpl::class,
     ProductVariantRepository::class => ProductVariantRepositoryImpl::class,
     ProductImageRepository::class => ProductImageRepositoryImpl::class,

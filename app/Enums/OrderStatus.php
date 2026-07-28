@@ -36,19 +36,20 @@ enum OrderStatus: int
     // optional: filter allowed statuses (example: admin control)
     public static function allowedForAdmin(): array
     {
-        return array_map(
-            fn(self $case) => [
-                'value' => $case->value,
-                'label' => $case->label(),
-            ],
-            [
-                self::PENDING,
-                self::PAID,
-                self::SHIPPED,
-                self::DELIVERED,
-                self::CANCELLED,
-            ]
-        );
+        // return array_map(
+        //     fn(self $case) => [
+        //         'value' => $case->value,
+        //         'label' => $case->label(),
+        //     ],
+        //     [
+        //         self::PENDING,
+        //         self::PAID,
+        //         self::SHIPPED,
+        //         self::DELIVERED,
+        //         self::CANCELLED,
+        //     ]
+        // );
+        return [self::PENDING, self::PAID, self::SHIPPED, self::DELIVERED, self::CANCELLED,];
     }
 
     // example: only cancellable statuses

@@ -14,44 +14,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Builder;
 
-// abstract class BaseRepositoryImpl implements BaseRepository
-// {
-
-//     protected ?AuthUser $actingUser = null;
-
-//     public function __construct(protected Model $model) {}
-
-//     public function findByIdWithConditions(int $id, array $select = ['*'], array $conditions = []): ?Model
-//     {
-//         $query = $this->model->select($select)->where('id', $id);
-
-//         foreach ($conditions as $column => $value) {
-//             $query->where($column, $value);
-//         }
-
-//         return $query->first();
-//     }
-// }
-
-
-
-
 abstract class BaseRepositoryImpl implements BaseRepository
 {
     protected ?AuthUser $actingUser = null;
 
     public function __construct(protected Model $model) {}
-
-    // public function findByIdWithConditions(int $id, array $select = ['*'], array $conditions = []): ?Model
-    // {
-    //     $query = $this->model->select($select)->where('id', $id);
-
-    //     foreach ($conditions as $column => $value) {
-    //         $query->where($column, $value);
-    //     }
-
-    //     return $query->first();
-    // }
 
     public function updateProfileByUserId(int $userId, array $data)
     {
@@ -343,21 +310,7 @@ abstract class BaseRepositoryImpl implements BaseRepository
             beforeQuery: $beforeQuery
         );
     }
-
-    // public function updateupdateById(int $id, array $data, array $conditions = ['deleted_at' => null], $throwIfNotFound = 'Resource not found'): ?Model
-    // {
-    //     $record = $this->model->where('id', $id);
-
-    //     foreach ($conditions as $column => $value) {
-    //         $record->where($column, $value);
-    //     }
-    //     $record = $record->first();
-    //     if (!$record) {
-    //         throw new NotFoundExcept($throwIfNotFound);
-    //     }
-    //     $record->update($data);
-    //     return $record;
-    // }
+    
     public function findByEmailWithConditions(string $email, array $select = ['*'], array $conditions = []): ?Model
     {
         $query = $this->model->select($select)->where('email', $email);

@@ -76,7 +76,12 @@ class CustomerServiceImpl implements CustomerService
 
     public function getAllUser(array $filters = []) // get data from repisitory customer where role
     {
-        return $this->userRepository->getUser($filters);
+        return $this->userRepository->getUser($filters);// get user only where role customer
+    }
+
+    public function customerProfileDetail(int $id)
+    {
+        return $this->;
     }
 
     public function getAllStaff(array $filters = []) // get data from repisitory staff where role
