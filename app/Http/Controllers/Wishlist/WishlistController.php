@@ -24,4 +24,11 @@ class WishlistController extends Controller
 
         return ApiResponse::success($wishlist, 'Wishlist created successfully');
     }
+
+
+    //for admin
+    public function getWishlishAdmin()
+    {
+        return ApiResponse::success($this->wishlistServices->getWishlishAdmin());
+    }
 }

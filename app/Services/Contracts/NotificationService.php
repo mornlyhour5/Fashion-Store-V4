@@ -6,5 +6,7 @@ use Illuminate\Http\Request;
 
 interface NotificationService
 {
-    public function getNotification(Request $request);
+    public function getNotificationUser(Request $request);
+
+    public function getNotificationAdmin(Request $request);
 }

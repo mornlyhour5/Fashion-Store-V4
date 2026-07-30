@@ -8,11 +8,10 @@ use Illuminate\Http\Request;
 interface AddressService
 //
 {
-    public function getAddress(Request $request);
+    //for customer
+    public function getAddressByUserId();
 
-    public function getAddressByUserId(int $id);
-
-    public function getAddressById(array $data, int $id): mixed;
+    // public function getAddressById(array $data, int $id): mixed;
 
     public function create(Request $request): Model;
 
@@ -22,6 +21,5 @@ interface AddressService
 
 
     // this for admin
-
     public function getAddressAdmin(Request $request);
 }

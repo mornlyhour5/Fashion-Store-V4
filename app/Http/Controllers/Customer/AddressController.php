@@ -11,21 +11,14 @@ class AddressController extends Controller
 {
     public function __construct(protected AddressService $addressService) {}
 
-    public function index(Request $request)
-    {
-        // $userId    = $request->user()->id;
-        // return ApiResponse::success($this->addressService->getByUserId($userId));
-        return ApiResponse::success($this->addressService->getAddress($request));
-    }
-
-    public function show(Request $request, int $id)
-    {
-        return ApiResponse::success($this->addressService->getAddressById($request->all(), $id));
-    }
-
     public function store(Request $request)
     {
         return ApiResponse::success($this->addressService->create($request));
+    }
+
+    public function getAddressByUserId()
+    {
+        return ApiResponse::success($this->addressService->getAddressByUserId());
     }
 
     public function update(Request $request,int $id)
@@ -44,9 +37,9 @@ class AddressController extends Controller
         return ApiResponse::success($this->addressService->getAddressAdmin($request));
     }
 
-    public function getAddressUserforAdmin(int $id) //this get for admin manages customer information
+    public function getAddressUserforAdmin() //this get for admin manages customer information
     {
-        $address = $this->addressService->getAddressByUserId($id);
+        $address = $this->addressService->getAddressByUserId();
 
         return ApiResponse::success($address, 'address retrived successfully');
     }

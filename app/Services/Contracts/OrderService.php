@@ -26,4 +26,11 @@ interface OrderService
     public function getHistory(Request $request);
 
 
+
+    //For user
+    public function getOrderHistory(Request $request);
+
+    public function getOrderRecent(Request $request);
+
+
 }

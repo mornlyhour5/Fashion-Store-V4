@@ -2,10 +2,10 @@
 
 namespace App\Enums;
 
-enum Language: string
+enum Language: int
 {
-    case EN = 'EN';
-    case KH = 'KH';
+    case EN = 1;
+    case KH = 2;
 
     public function label(): string
     {
@@ -18,7 +18,7 @@ enum Language: string
     public static function options(): array
     {
         return array_map(
-            fn(self $case) => [
+            fn (self $case) => [
                 'value' => $case->value,
                 'label' => $case->label(),
             ],

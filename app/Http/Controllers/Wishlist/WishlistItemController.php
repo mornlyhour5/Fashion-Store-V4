@@ -4,12 +4,20 @@ namespace App\Http\Controllers\Wishlist;
 
 use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
+use App\Repository\Contracts\CustomerRepository;
+use App\Repository\Contracts\ProductImageRepository;
+use App\Repository\Contracts\ProductRepository;
 use App\Services\Contracts\WishlistItemService;
 use Illuminate\Http\Request;
 
 class WishlistItemController extends Controller
 {
-    public function __construct(protected WishlistItemService $wishlistItemServices){}
+    public function __construct(
+        protected WishlistItemService $wishlistItemServices,
+        protected CustomerRepository $customer,
+        protected ProductRepository $product,
+        protected ProductImageRepository $image,
+    ){}
 
 
     public function index(Request $request)
@@ -37,4 +45,18 @@ class WishlistItemController extends Controller
 
         return ApiResponse::success($wishlist, 'Remove from wish successfully');
     }
+
+
+    //for admin
+    public function show(Request $request, int $id)
+    {
+        return ApiResponse::success($this->wishlistItemServices->getWishlishItemAdmin($request, $id));
+    }
+
+    public function getWishlishItemAdmin(Request $request, int $id)
+    {
+        return ApiResponse::success($this->wishlistItemServices->getWishlishItemAdmin($request, $id));
+    }
+
+
 }

@@ -55,11 +55,11 @@ class Products extends Model
     ];
 
     public function getImageUrlAttribute(): ?string
-{
-    if (empty($this->thumbnail)) {   // 👈 renamed from "image"
-        return null;
-    }
+    {
+        if (empty($this->thumbnail)) {   // 👈 renamed from "image"
+            return null;
+        }
 
-    return asset('uploads/images/' . \App\Enums\ImageBuket::COMPANY->value . '/' . \App\Enums\ImageDirectory::PRODUCT->value . '/' . $this->thumbnail);
-}
+        return asset('uploads/images/' . \App\Enums\ImageBuket::COMPANY->value . '/' . \App\Enums\ImageDirectory::PRODUCT->value . '/' . $this->thumbnail);
+    }
 }

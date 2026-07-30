@@ -46,4 +46,15 @@ class WishlistServiceImpl implements WishlistService
 
         return $this->wishlistRepository->create(['user_id' => $userId]);
     }
+
+
+
+
+
+
+    // for admin
+    public function getWishlishAdmin()
+    {
+        return $this->wishlistRepository->getAll();
+    }
 }

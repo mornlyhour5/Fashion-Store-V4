@@ -13,4 +13,8 @@ interface WishlistItemService
     public function create(Request $request);
 
     public function delete(int $id);
+
+
+    // for admin
+    public function getWishlishItemAdmin(Request $request, int $id);
 }

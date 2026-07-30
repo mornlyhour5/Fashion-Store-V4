@@ -9,4 +9,9 @@ interface WishlistService
     public function getWistList(Request $request);
 
     public function create(Request $request);
+
+
+
+    //for admin
+    public function getWishlishAdmin();
 }

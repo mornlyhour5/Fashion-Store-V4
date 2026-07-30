@@ -31,4 +31,9 @@ class Product_Variants extends Model
     {
         return $this->hasMany(Product_Images::class, 'product_variant_id')->orderBy('sort_order');
     }
+
+    public function variant()
+    {
+        return $this->hasMany(Wishlist_Items::class, 'variant');
+    }
 }

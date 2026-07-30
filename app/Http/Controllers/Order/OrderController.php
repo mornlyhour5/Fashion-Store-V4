@@ -44,4 +44,17 @@ class OrderController extends Controller
 
         return ApiResponse::success($order, 'Update status successfully');
     }
+
+
+    //controller for user
+
+    public function getOrderHistory(Request $request)
+    {
+        return ApiResponse::success($this->orderServices->getOrderHistory($request));
+    }
+
+    public function getOrderRecent(Request $request)
+    {
+        return ApiResponse::success($this->orderServices->getOrderRecent($request));
+    }
 }

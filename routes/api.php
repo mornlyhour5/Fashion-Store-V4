@@ -8,7 +8,7 @@ use App\Http\Controllers\Customer\AddressController;
 use App\Http\Controllers\Customer\CustomerController;
 use App\Http\Controllers\Notification\NotificationController;
 use App\Http\Controllers\Order\OrderController;
-use App\Http\Controllers\Order\OrderItemController;
+// use App\Http\Controllers\Order\OrderItemController;
 use App\Http\Controllers\Order\OrderStatusHistoryController;
 use App\Http\Controllers\Product\BrandController;
 use App\Http\Controllers\Product\CategoryController;
@@ -47,8 +47,31 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/logout',       [LoginController::class, 'logout']);
     Route::get('/me',            [CustomerController::class, 'me']);
 
+    Route::post('/customer/avatar', [CustomerController::class, 'manageProfile']);
+
+    Route::prefix('AddressUser')->group(function () {
+        Route::get('/', [AddressController::class, 'getAddressByUserId']);
+        Route::post('/', [AddressController::class, 'store']);
+        // Route::get('/{id}', [AddressController::class, 'show']);
+        Route::put('/{id}', [AddressController::class, 'update']);
+        Route::delete('/{id}', [AddressController::class, 'delete']);
+    });
+
+    Route::get('/getOrderHistory', [OrderController::class, 'getOrderHistory']);
+    Route::get('/getOrderRecent', [OrderController::class, 'getOrderRecent']);
+    Route::prefix('Order')->group(function () {
+        // Route::get('/', [OrderController::class, 'getOrderRecent']);
+        // Route::get('/{id}', [AddressController::class, 'show']);
+        Route::post('/', [OrderController::class, 'store']);
+        Route::put('/{id}', [OrderController::class, 'update']);
+        Route::delete('/{id}', [OrderController::class, 'delete']);
+    });
+
+    Route::get('/notificationUser', [NotificationController::class, 'index']);
+
+
+
 //  admin route manages
-    Route::get('/notifications', [NotificationController::class, 'index']);
     Route::get('/getforuser',    [OrderController::class, 'getforuser']);
     Route::get('/wishlists',         [WishlistController::class, 'index']);
 
@@ -64,6 +87,19 @@ Route::middleware('auth:api')->group(function () {
     Route::put('/coupon-usages/{id}',        [CouponUsageController::class, 'update']);
     Route::delete('/coupon-usages/{id}',     [CouponUsageController::class, 'delete']);
 
+
+    //notification
+    // Route::get('/notificationAdmin', [NotificationController::class, 'getNotificationAdmin']);
+    // Route::get('/notificationAdmin', [NotificationController::class, 'getNotificationAdmin']);
+    Route::prefix('notificationAdmin')->group(function () {
+        Route::get('/', [NotificationController::class, 'getNotificationAdmin']);
+        Route::post('/', [NotificationController::class, 'store']);
+        Route::get('/{id}', [NotificationController::class, 'show']);
+        Route::put('/{id}', [NotificationController::class, 'update']);
+        Route::delete('/{id}', [NotificationController::class, 'delete']);
+    });
+
+
     //Product
     Route::delete('/Product-variant/{variantId}/image/{imageId}', [ProductVariantController::class, 'deleteImage']);
     Route::patch('/Product-variant/{variantId}/image/{imageId}/main', [ProductVariantController::class, 'setMainImage']);
@@ -77,7 +113,7 @@ Route::middleware('auth:api')->group(function () {
     Route::patch('/customers/{id}/status', [CustomerController::class, 'updateStatusUser']);
     Route::get('/customerProfile/{id}',    [CustomerController::class, 'customerProfile']);
     Route::put('/customer/profile',        [CustomerController::class, 'updateProfile']);
-    Route::post('/customer/avatar',        [CustomerController::class, 'updateAvatar']);
+    // Route::post('/customer/avatar',        [CustomerController::class, 'updateAvatar']);
 
 
     Route::get('/order-status-histories',         [OrderStatusHistoryController::class, 'index']);
@@ -89,10 +125,6 @@ Route::middleware('auth:api')->group(function () {
 
     //this route for admin maneges order
     Route::put('/Orders/{id}',    [OrderController::class, 'update']);
-
-
-    // this route for order items
-    Route::put('/Order-item/{id}',    [OrderItemController::class, 'update']);
 
     //block code admin manage customer
     Route::get('/customer-profiles/{id}', [CustomerController::class, 'getDetail']);
@@ -108,9 +140,22 @@ Route::middleware('auth:api')->group(function () {
         Route::delete('/{id}', [AddressController::class, 'delete']);
     });
 
-});
+    //admin wishitems
+    Route::prefix('WishAdmin')->group(function () {
+        Route::get('/', [WishlistController::class, 'getWishlishAdmin']);
+        Route::post('/', [WishlistController::class, 'store']);
+        Route::get('/{id}', [WishlistController::class, 'show']);
+        Route::put('/{id}', [WishlistController::class, 'update']);
+        Route::delete('/{id}', [WishlistController::class, 'delete']);
+    });
 
-
+    Route::prefix('WishItemAdmin')->group(function () {
+        Route::get('/', [WishlistItemController::class, 'getWishlishItemAdmin']);
+        Route::post('/', [WishlistItemController::class, 'store']);
+        Route::get('/{id}', [WishlistItemController::class, 'show']);
+        Route::put('/{id}', [WishlistItemController::class, 'update']);
+        Route::delete('/{id}', [WishlistItemController::class, 'delete']);
+    });
     Route::get('/customer-profiles/{id}', [CustomerController::class, 'getDetail']);
 
     Route::get('/customers',         [CustomerController::class, 'index']);
@@ -118,13 +163,8 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/customers/{id}',    [CustomerController::class, 'show']);
     Route::put('/customers/{id}',    [CustomerController::class, 'update']);
     Route::delete('/customers/{id}', [CustomerController::class, 'delete']);
+});
 
-
-    Route::get('/addresses',         [AddressController::class, 'index']);
-    Route::get('/addresses/{id}',    [AddressController::class, 'show']);
-    Route::post('/addresses',        [AddressController::class, 'store']);
-    Route::put('/addresses/{id}',    [AddressController::class, 'update']);
-    Route::delete('/addresses/{id}', [AddressController::class, 'delete']);
 
 Route::get('/categories',         [CategoryController::class, 'index']);
 Route::post('/categories',        [CategoryController::class, 'store']);
@@ -162,11 +202,11 @@ Route::get('/wishlistItem/{id}',    [WishlistItemController::class, 'show']);
 Route::put('/wishlistItem/{id}',    [WishlistItemController::class, 'update']);
 Route::delete('/wishlistItem/{id}', [WishlistItemController::class, 'delete']);
 
-Route::get('/Orders',         [OrderController::class, 'index']);
-Route::post('/Orders',        [OrderController::class, 'store']);
-Route::get('/Orders/{id}',    [OrderController::class, 'show']);
-Route::put('/Orders/{id}',    [OrderController::class, 'update']);
-Route::delete('/Orders/{id}', [OrderController::class, 'delete']);
+// Route::get('/Orders',         [OrderController::class, 'index']);
+// Route::post('/Orders',        [OrderController::class, 'store']);
+// Route::get('/Orders/{id}',    [OrderController::class, 'show']);
+// Route::put('/Orders/{id}',    [OrderController::class, 'update']);
+// Route::delete('/Orders/{id}', [OrderController::class, 'delete']);
 
 // Route::get('/Order-status-history',         [OrderStatusHistoryController::class, 'index']);
 // Route::post('/Order-status-history',        [OrderStatusHistoryController::class, 'store']);

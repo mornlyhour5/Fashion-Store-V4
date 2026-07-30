@@ -94,13 +94,12 @@ class CustomerController extends Controller
         return ApiResponse::success($profile, 'Profile updated.');
     }
 
-    public function updateAvatar(Request $request)
+    public function manageProfile(Request $request)
     {
-        $request->validate(['avatar' => 'required']);
-
-        $userId = Auth::guard('api')->id();
-
-        $profile = $this->customerService->updateAvatar($userId, $request->file('avatar'));
+        $profile = $this->customerService->updateAvatar(
+            ['avatar' => $request->file('avatar')],
+            Auth::guard('api')->id()
+        );
 
         return ApiResponse::success($profile, 'Avatar updated.');
     }

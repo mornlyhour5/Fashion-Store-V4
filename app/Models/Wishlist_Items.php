@@ -10,7 +10,8 @@ class Wishlist_Items extends Model
 
     protected $fillable = [
         'wishlist_id',
-        'product_id'
+        'product_id',
+        'variantId'
     ];
 
     public function wishlist()
@@ -21,5 +22,10 @@ class Wishlist_Items extends Model
     public function product()
     {
         return $this->belongsTo(Products::class);
+    }
+
+    public function variant()
+    {
+        return $this->belongsTo(Product_Variants::class);
     }
 }

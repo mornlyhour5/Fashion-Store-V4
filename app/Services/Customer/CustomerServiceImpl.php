@@ -5,6 +5,8 @@ namespace App\Services\Customer;
 use App\Enums\AccountStatus;
 use App\Enums\ImageBuket;
 use App\Enums\ImageDirectory;
+use App\Exceptions\BadRequestExcept;
+// use App\Exceptions\DuplicateExcept;
 use App\Exceptions\NotFoundExcept;
 use App\Helpers\CustomValidator;
 use App\Helpers\HelperMedia;
@@ -12,7 +14,8 @@ use App\Repository\Contracts\CustomerProfileRepository;
 use App\Repository\Contracts\CustomerRepository;
 use App\Repository\Contracts\UserRepository;
 use App\Services\Contracts\CustomerService;
-use Illuminate\Http\UploadedFile;
+// use Illuminate\Http\Request;
+// use Illuminate\Http\UploadedFile;
 // use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -115,37 +118,43 @@ class CustomerServiceImpl implements CustomerService
         });
     }
 
-    public function updateAvatar(int $id, UploadedFile $avatarFile)
+    public function updateAvatar(array $data, int $id)
     {
-        $user = $this->userRepository->findById($id);
+        $userId = Auth::guard('api')->id();
+
+        $user = $this->userRepository->findById($userId);
 
         if (!$user) {
-            throw new NotFoundExcept(__('messages.not_found', ['info' => 'general.user']));
+            throw new NotFoundExcept();
         }
 
-        $oldAvatar = $user->userProfile->avata ?? null;
+        if (empty($data['avatar']) || !($data['avatar'] instanceof \Illuminate\Http\UploadedFile)) {
+            throw new BadRequestExcept('An avatar image is required.');
+        }
 
-        if (!empty($oldAvatar)) {
+        $imageFile = $data['avatar'];
+
+        if (!empty($user->avata)) {
             HelperMedia::deleteUploadedFile(
                 'image',
-                ImageBuket::USER->value,
-                ImageDirectory::AVATAR->value,
-                $oldAvatar
+                ImageBuket::COMPANY->value,
+                ImageDirectory::PROFILE->value,
+                $user->avata
             );
         }
 
         $result = HelperMedia::saveUploadedFile(
-            $avatarFile,
+            $imageFile,
             'image',
-            ImageBuket::USER->value,
-            ImageDirectory::AVATAR->value
+            ImageBuket::COMPANY->value,
+            ImageDirectory::PROFILE->value
         );
 
-        return DB::transaction(function () use ($id, $result) {
-            return $this->userRepository->updateProfileByUserId($id, [
-                'avata' => $result->filename ?? null,
-            ]);
-        });
+        $this->userRepository->updateById($userId, [
+            'avata' => $result->filename ?? null,
+        ]);
+
+        return $this->userRepository->findById($userId);
     }
 
     public function getUserById(int $id)

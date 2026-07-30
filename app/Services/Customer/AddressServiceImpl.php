@@ -36,9 +36,10 @@ class AddressServiceImpl implements AddressService
         return $this->validator->validate($data, $rules);
     }
 
-    public function getAddressByUserId(int $id)
+    public function getAddressByUserId()
     {
-        return $this->addressRepository->findByUserId($id);
+        $userId = Auth::guard('api')->id();
+        return $this->addressRepository->findByUserId($userId);
     }
 
     // #[Override]
@@ -63,18 +64,18 @@ class AddressServiceImpl implements AddressService
         );
     }
 
-    public function getAddressById(array $data, int $id): mixed
-    {
-        $address = $this->addressRepository->findById($id, select: ['id', 'recipient_name', 'country']);
+    // public function getAddressById(array $data, int $id): mixed
+    // {
+    //     $address = $this->addressRepository->findById($id, select: ['id', 'recipient_name', 'country']);
 
-        if (!$address) {
-            throw new NotFoundExcept(__('message.not_found', [
-                'info' => __('general.address')
-            ]));
-        }
+    //     if (!$address) {
+    //         throw new NotFoundExcept(__('message.not_found', [
+    //             'info' => __('general.address')
+    //         ]));
+    //     }
 
-        return $address;
-    }
+    //     return $address;
+    // }
 
     public function create(Request $request): Model
     {

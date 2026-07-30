@@ -55,4 +55,14 @@ class WishlistItemServiceImpl implements WishlistItemService
     {
         return $this->wishlistItem->deleteById($id);
     }
+
+
+    //for admin
+    public function getWishlishItemAdmin(Request $request, int $id)
+    {
+        return $this->wishlistItem->pagination(
+            fileters: $request->all(),
+            conditions: ['wishlist_id' => $id],
+        );
+    }
 }

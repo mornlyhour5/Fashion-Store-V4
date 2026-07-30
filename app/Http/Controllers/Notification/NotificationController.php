@@ -15,8 +15,12 @@ class NotificationController extends Controller
 
     public function index(Request $request)
     {
-        return ApiResponse::success($this->notification->getNotification($request));
+        return ApiResponse::success($this->notification->getNotificationUser($request));
     }
 
-    // public no
+    // for admin
+    public function getNotificationAdmin(Request $request)
+    {
+        return ApiResponse::success($this->notification->getNotificationAdmin($request));
+    }
 }

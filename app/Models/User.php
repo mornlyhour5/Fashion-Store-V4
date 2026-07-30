@@ -19,6 +19,8 @@ class User extends Authenticatable implements JWTSubject
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    protected $appends = ['avata_url'];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -78,6 +80,15 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTIdentifier()
     {
         return $this->getKey();
+    }
+
+    public function getAvataUrlAttribute(): ?string
+    {
+        if (empty($this->avata)) {   // 👈 renamed from "image"
+            return null;
+        }
+
+        return asset('uploads/images/' . \App\Enums\ImageBuket::COMPANY->value . '/' . \App\Enums\ImageDirectory::PROFILE->value . '/' . $this->avata);
     }
 
     /**

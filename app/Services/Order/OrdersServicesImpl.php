@@ -135,7 +135,28 @@ class OrdersServicesImpl implements OrderService
         })->toArray();
     }
 
+    public function getOrderHistory(Request $request)
+    {
+        $userId = Auth::guard('api')->id();
 
+        return $this->orderRepository->pagination(
+            fileters: $request->all(),
+            conditions: ['user_id' => $userId],
+            limit: (int) $request->input('per_page', 20),
+        );
+    }
+
+    public function getOrderRecent(Request $request)
+    {
+        $userId = Auth::guard('api')->id();
+
+        return $this->orderRepository->pagination(
+            fileters: ['perPage' => 5],
+            conditions: ['user_id' => $userId],
+            limit: 5,
+            rawSort: '-created_at',
+        );
+    }
 
     private function orderNumbergenerate()
     {
