@@ -11,28 +11,28 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         // Validate the incoming request data
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
-        ]);
+        // $validatedData = $request->validate([
+        //     'name' => 'required|string|max:255',
+        //     'email' => 'required|string|email|max:255|unique:users',
+        //     'password' => 'required|string|min:8|confirmed',
+        // ]);
 
-        // Create a new user
-        $user = User::create([
-            'name' => $validatedData['name'],
-            'email' => $validatedData['email'],
-            'password' => Hash::make($validatedData['password']),
-        ]);
+        // // Create a new user
+        // $user = User::create([
+        //     'name' => $validatedData['name'],
+        //     'email' => $validatedData['email'],
+        //     'password' => Hash::make($validatedData['password']),
+        // ]);
 
-        // Generate an authentication token for the user
-        $token = $user->createToken('auth_token')->plainTextToken;
+        // // Generate an authentication token for the user
+        // $token = $user->createToken('auth_token')->plainTextToken;
 
-        // Return the user and token in the response
-        return response()->json([
-            'access_token' => $token,
-            'token_type' => 'Bearer',
-            'user' => $user,
-        ], 201);
+        // // Return the user and token in the response
+        // return response()->json([
+        //     'access_token' => $token,
+        //     'token_type' => 'Bearer',
+        //     'user' => $user,
+        // ], 201);
     }
 
 

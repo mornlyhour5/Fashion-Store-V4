@@ -2,8 +2,12 @@
 
 namespace App\Services\Auth;
 
+use App\Enums\NotificationType;
+use App\Enums\Role;
+use App\Helpers\CustomValidator;
 use App\Models\User;
 use App\Repository\Contracts\AuthRepository;
+use App\Repository\Contracts\NotificationRepository;
 use Illuminate\Http\Request;
 use App\Services\Contracts\AuthService;
 use Illuminate\Support\Facades\Auth;
@@ -15,8 +19,22 @@ class AuthServiceImpl implements AuthService
 //  implements AuthService
 {
     public function __construct(
-        protected AuthRepository $authRepository
+        protected AuthRepository $authRepository,
+        protected NotificationRepository $notification,
+        protected CustomValidator $validator
     ) {}
+
+    private function notificationValidate(array $data)
+    {
+        $rules = [
+            'user_id' => 'nullable',
+            'type'    => 'nullable',
+            'title'   => 'nullable',
+            'body'    => 'nullable',
+            'data'    => 'nullable',
+        ];
+        return $this->validator->validate($data, $rules);
+    }
 
     public function register(Request $request): array
     {
@@ -27,9 +45,34 @@ class AuthServiceImpl implements AuthService
             'role'     => \App\Enums\Role::CUSTOMER,
         ]);
 
+        // Find all admins
+        // use App\Enums\Role;
+
+        $receivers = User::whereIn('role', [
+            Role::ADMIN,
+            Role::STAFF,
+        ])->get();
+
+        foreach ($receivers as $receiver) {
+            $this->notification->create([
+                'user_id' => $receiver->id,
+                'type'    => NotificationType::USER_REGISTERED->value,
+                'title'   => 'New Customer Registered',
+                'body'    => "{$user->name} has created a new account.",
+                'data'    => json_encode([
+                    'customer_id'    => $user->id,
+                    'customer_name'  => $user->name,
+                    'customer_email' => $user->email,
+                ]),
+            ]);
+        }
+
         $token = JWTAuth::fromUser($user);
 
-        return ['user' => $user, 'token' => $token];
+        return [
+            'user'  => $user,
+            'token' => $token,
+        ];
     }
 
     public function login(array $credentials): array

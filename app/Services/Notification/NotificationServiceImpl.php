@@ -29,8 +29,11 @@ class NotificationServiceImpl implements NotificationService
 
     public function getNotificationAdmin(Request $request)
     {
+        $id = Auth::guard('api')->id();
+
         return $this->notification->pagination(
             fileters: $request->all(),
+            conditions: ['user_id' =>  $id],
             limit: (int) $request->input('per_page', 20),
             rawSort: $request->input('sort', '-created_at'),
         );
