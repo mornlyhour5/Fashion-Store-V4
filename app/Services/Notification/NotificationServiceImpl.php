@@ -38,4 +38,8 @@ class NotificationServiceImpl implements NotificationService
             rawSort: $request->input('sort', '-created_at'),
         );
     }
+    public function makeRead(int $id, int $userId)
+    {
+        return $this->notification->markRead($id, $userId);
+    }
 }

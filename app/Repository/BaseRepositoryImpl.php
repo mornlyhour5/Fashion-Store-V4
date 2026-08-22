@@ -203,6 +203,13 @@ abstract class BaseRepositoryImpl implements BaseRepository
     // {
     //     return $this->model->newQuery()->select($select);
     // }
+    public function markRead(int $id, int $userId)
+    {
+        return $this->model
+            ->where('id', $id)
+            ->where('user_id', $userId)
+            ->update(['read_at' => now()]);
+    }
 
     public function pagination(
         array $fileters,
@@ -341,5 +348,10 @@ abstract class BaseRepositoryImpl implements BaseRepository
             ->withCount('orderItems')
             ->latest()
             ->get();
+    }
+
+    public function getProductTrending()
+    {
+
     }
 }

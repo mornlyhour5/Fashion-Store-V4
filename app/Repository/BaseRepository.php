@@ -20,7 +20,11 @@ interface BaseRepository
 
     public function getStaff(array $filters = []);
 
+    public function getProductTrending();
+
     public function findByUserId(int $userId);
+
+    public function markRead(int $id, int $userId);
 
     public function findByIduser(int $id, array $with = []);
 

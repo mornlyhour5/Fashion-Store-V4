@@ -91,7 +91,7 @@ class CustomerServiceImpl implements CustomerService
 
     public function getAllStaff(array $filters = []) // get data from repisitory staff where role
     {
-         return $this->customerRepository->getStaff();
+         return $this->userRepository->getStaff();
     }
 
     public function updateProfile(int $id, array $data)

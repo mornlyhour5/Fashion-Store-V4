@@ -8,7 +8,6 @@ use App\Http\Controllers\Customer\AddressController;
 use App\Http\Controllers\Customer\CustomerController;
 use App\Http\Controllers\Notification\NotificationController;
 use App\Http\Controllers\Order\OrderController;
-// use App\Http\Controllers\Order\OrderItemController;
 use App\Http\Controllers\Order\OrderStatusHistoryController;
 use App\Http\Controllers\Product\BrandController;
 use App\Http\Controllers\Product\CategoryController;
@@ -67,8 +66,9 @@ Route::middleware('auth:api')->group(function () {
         Route::delete('/{id}', [OrderController::class, 'delete']);
     });
 
-    Route::get('/notificationUser', [NotificationController::class, 'index']);
 
+    Route::get('/notificationUser', [NotificationController::class, 'index']);
+    Route::put('/notificationRead/{id}', [NotificationController::class, 'makeRead']);
 
 
 //  admin route manages

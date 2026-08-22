@@ -61,7 +61,7 @@ class CategoryServiceImpl implements CategoryServices
 
         return $this->categoryrepository->create($validated);
     }
-   
+
     public function getCategoryById(int $id): mixed
     {
         $category = $this->categoryrepository->findById($id, select: [
