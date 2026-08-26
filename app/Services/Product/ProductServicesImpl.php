@@ -10,12 +10,15 @@ use App\Enums\ProductStatus;
 // use App\Enums\Status;
 use App\Exceptions\DuplicateExcept;
 use App\Exceptions\NotFoundExcept;
+use App\Helpers\ApiResponse;
 use App\Helpers\CustomValidator;
 use App\Helpers\HelperMedia;
+use App\Http\Resources\ProductResource;
 use App\Repository\Contracts\ProductRepository;
 use App\Services\Contracts\ProductServices;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+
 // use Illuminate\Support\Facades\DB;
 
 class ProductServicesImpl implements ProductServices
@@ -163,4 +166,10 @@ class ProductServicesImpl implements ProductServices
         // }
         throw new ('dkfjghdfg');
     }
+
+    public function getTrending(int $limit = 10): mixed
+{
+    $products = $this->productrepository->getTrending($limit);
+    return ApiResponse::success(ProductResource::collection($products));
+}
 }

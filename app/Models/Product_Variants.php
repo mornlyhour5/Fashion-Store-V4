@@ -27,7 +27,7 @@ class Product_Variants extends Model
         return $this->belongsTo(Products::class, 'product_id');
     }
 
-    public function productImages()
+    public function Images()
     {
         return $this->hasMany(Product_Images::class, 'product_variant_id')->orderBy('sort_order');
     }

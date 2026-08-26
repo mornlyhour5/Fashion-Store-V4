@@ -20,8 +20,6 @@ interface BaseRepository
 
     public function getStaff(array $filters = []);
 
-    public function getProductTrending();
-
     public function findByUserId(int $userId);
 
     public function markRead(int $id, int $userId);
@@ -51,6 +49,8 @@ interface BaseRepository
     public function clearMainForVariant(int $variantId);
 
     public function getByVariant(int $id);
+
+    // public function getTrending(int $limit = 10, int $days = 30): Collection;
 
     public function updateProfileByUserId(int $userId, array $data);
 

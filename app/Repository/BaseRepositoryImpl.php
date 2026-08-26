@@ -350,8 +350,4 @@ abstract class BaseRepositoryImpl implements BaseRepository
             ->get();
     }
 
-    public function getProductTrending()
-    {
-
-    }
 }

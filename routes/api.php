@@ -172,6 +172,7 @@ Route::get('/categories/{id}',    [CategoryController::class, 'show']);
 Route::put('/categories/{id}',    [CategoryController::class, 'update']);
 Route::delete('/categories/{id}', [CategoryController::class, 'delete']);
 
+Route::get('/products/trending', [ProductController::class, 'trending']);
 Route::get('/products',         [ProductController::class, 'index']);
 Route::post('/products',        [ProductController::class, 'store']);
 Route::get('/products/{id}',    [ProductController::class, 'show']);

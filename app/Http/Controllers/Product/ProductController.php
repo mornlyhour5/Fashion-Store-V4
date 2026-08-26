@@ -45,4 +45,9 @@ class ProductController extends Controller
     {
         return ApiResponse::success($this->productservices->delete($id));
     }
+
+    public function trending(Request $request)
+    {
+        return $this->productservices->getTrending((int) $request->query('limit', 10));
+    }
 }
