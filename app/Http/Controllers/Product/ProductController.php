@@ -50,4 +50,9 @@ class ProductController extends Controller
     {
         return $this->productservices->getTrending((int) $request->query('limit', 10));
     }
+
+    public function showBySlug(string $slug)
+    {
+        return ApiResponse::success($this->productservices->showBySlug($slug));
+    }
 }

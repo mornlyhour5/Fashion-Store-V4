@@ -20,4 +20,6 @@ interface ProductServices
     public function implementData(array $data): mixed;
 
     public function getTrending(int $limit = 10): mixed;
+
+    public function showBySlug(string $slug);
 }

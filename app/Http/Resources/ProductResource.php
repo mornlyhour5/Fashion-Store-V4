@@ -16,7 +16,7 @@ class ProductResource extends JsonResource
     {
         $firstVariantImage = $this->relationLoaded('variants')
             ? $this->variants
-                ->flatMap(fn($v) => $v->relationLoaded('images') ? $v->images : collect())
+                ->flatMap(fn($v) => $v->relationLoaded('image') ? $v->images : collect())
                 ->sortByDesc('is_main')
                 ->first()
             : null;
@@ -33,7 +33,7 @@ class ProductResource extends JsonResource
             'base_price'  => $this->base_price,
             'gender'      => $this->gender ?? GenderProduct::UNISEX->value,
             'status'      => $this->status ?? ProductStatus::ACTIVE->value,
-            'image'       => HelperMedia::getImageUrl(
+            'images'       => HelperMedia::getImageUrl(
                 ImageBuket::COMPANY->value,
                 ImageDirectory::PRODUCT->value,
                 $imageFile

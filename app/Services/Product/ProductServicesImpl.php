@@ -14,17 +14,22 @@ use App\Helpers\ApiResponse;
 use App\Helpers\CustomValidator;
 use App\Helpers\HelperMedia;
 use App\Http\Resources\ProductResource;
+use App\Repository\Contracts\ProductImageRepository;
 use App\Repository\Contracts\ProductRepository;
+use App\Repository\Contracts\ProductReviewsRepository;
+use App\Repository\Contracts\ProductVariantRepository;
 use App\Services\Contracts\ProductServices;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
-
 // use Illuminate\Support\Facades\DB;
 
 class ProductServicesImpl implements ProductServices
 {
     public function __construct(
         protected ProductRepository $productrepository,
+        protected ProductVariantRepository $varaint,
+        protected ProductImageRepository $productImage,
+        protected ProductReviewsRepository $review,
         protected CustomValidator $validator,
     ) {}
 
@@ -161,15 +166,30 @@ class ProductServicesImpl implements ProductServices
 
     public function implementData(array $data): mixed
     {
-        // try {
-        //     return DB::transaction(function () use ($data,))
-        // }
         throw new ('dkfjghdfg');
     }
 
     public function getTrending(int $limit = 10): mixed
-{
-    $products = $this->productrepository->getTrending($limit);
-    return ApiResponse::success(ProductResource::collection($products));
-}
+    {
+        $products = $this->productrepository->getTrending($limit);
+        return ApiResponse::success(ProductResource::collection($products));
+    }
+
+    public function showBySlug(string $slug)
+    {
+        $product = $this->productrepository->findbyslug($slug);
+
+        if (!$product) {
+            throw new NotFoundExcept('Product not found');
+        }
+
+        $variants = $this->varaint->getVariantByProductID($product->id);
+        $reviews = $this->review->getByProductID($product->id);
+
+        return [
+            ...$product->toArray(),
+            'variants' => $variants,
+            'reviews' => $reviews,
+        ];
+    }
 }

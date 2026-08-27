@@ -9,7 +9,7 @@ use App\Enums\ProductStatus;
 class Products extends Model
 {
     protected $table = 'products';
-    protected $appends = ['image_url'];
+    protected $appends = ['images'];
 
     protected $fillable = [
         'category_id',
@@ -59,9 +59,9 @@ class Products extends Model
         'gender' => GenderProduct::class, // 👈 added
     ];
 
-    public function getImageUrlAttribute(): ?string
+    public function getImagesAttribute(): ?string
     {
-        if (empty($this->thumbnail)) {   // 👈 renamed from "image"
+        if (empty($this->thumbnail)) {
             return null;
         }
 

@@ -102,6 +102,16 @@ abstract class BaseRepositoryImpl implements BaseRepository
             ->get();
     }
 
+    public function getVariantByProductID(int $id)
+    {
+        return $this->model->where('product_id', $id)->get();
+    }
+
+    public function getByProductID(int $id)
+    {
+        return $this->model->where('product_id', $id)->get();
+    }
+
     public function setActingUser(?AuthUser $user): static
     {
         $this->actingUser = $user;
@@ -348,6 +358,30 @@ abstract class BaseRepositoryImpl implements BaseRepository
             ->withCount('orderItems')
             ->latest()
             ->get();
+    }
+
+    public function getTrending(int $limit = 10, int $days = 30): Collection
+    {
+        return $this->model->newQuery()
+            ->with(['variants' => function ($q) {
+                $q->whereNull('deleted_at')->with(['productImages' => function ($iq) {
+                    $iq->orderByDesc('is_main');
+                }]);
+            }])
+            ->withCount(['reviews as recent_review_count' => function ($q) use ($days) {
+                $q->where('created_at', '>=', now()->subDays($days));
+            }])
+            ->withAvg('reviews as avg_rating', 'rating')
+            ->whereNull('deleted_at')
+            ->orderByDesc('recent_review_count')
+            ->orderByDesc('avg_rating')
+            ->limit($limit)
+            ->get();
+    }
+
+    public function findbyslug(string $slug)
+    {
+        return $this->model->where('slug', $slug)->first();
     }
 
 }

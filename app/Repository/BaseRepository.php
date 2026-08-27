@@ -50,7 +50,15 @@ interface BaseRepository
 
     public function getByVariant(int $id);
 
+    public function getVariantByProductID(int $id);
+
+    public function getByProductID(int $id);
+
+    public function findbyslug(string $slug);
+
     // public function getTrending(int $limit = 10, int $days = 30): Collection;
+
+    public function getTrending(int $limit = 10, int $days = 30): Collection;
 
     public function updateProfileByUserId(int $userId, array $data);
 
